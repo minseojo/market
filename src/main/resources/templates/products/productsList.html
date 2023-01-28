@@ -5,15 +5,8 @@
 <div class="container">
   <div>
     <table>
-      <thead>
-      <tr>
-        <th>#</th>
-        <th>이름</th>
-      </tr>
-      </thead>
       <tbody>
       <tr th:each="product : ${products}">
-        <td th:text="${product.id}"></td>
         <td th:text="${product.name}"></td>
         <td th:text="${product.price}"></td>
       </tr>

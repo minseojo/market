@@ -3,6 +3,7 @@ package demo.demo.repository;
 import demo.demo.domain.Product;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MemoryProductRepository implements ProductRepository{
     private static Map<Long, Product> store = new HashMap<>();
@@ -24,6 +25,14 @@ public class MemoryProductRepository implements ProductRepository{
         return store.values().stream()
                 .filter(member -> member.getName().equals(name))
                 .findAny();
+    }
+
+    @Override
+    public List<Product> findByFilter(String name) {
+
+        return store.values().stream()
+                .filter(member -> member.getName().equals(name))
+                .collect(Collectors.toList());
     }
 
     @Override

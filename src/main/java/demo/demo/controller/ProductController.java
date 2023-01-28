@@ -7,17 +7,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ProductController {
 
     private final ProductService productService;
     @Autowired
-    public ProductController(ProductService productService, ProductService productService1) {
-        this.productService = productService1;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/products/new")
@@ -28,15 +30,18 @@ public class ProductController {
     public String create(ProductForm form) {
         Product product = new Product();
         product.setName(form.getName());
+        product.setPrice(form.getPrice());
         productService.create(product);
-
         return "redirect:/";
     }
 
     @GetMapping("/products")
-    public String list(Model model) {
-        List<Product> products = productService.findProduct();
+    public String getAllList(Model model) {
+        List<Product> products = productService.findAllProduct();
         model.addAttribute("products", products);
         return "products/productsList";
     }
+
+
+
 }

@@ -1,10 +1,18 @@
 package demo.demo.controller;
 
 public class ProductForm {
-    private Long Id;
+    private Long id;
     private String name;
     private int price;
     private String category;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

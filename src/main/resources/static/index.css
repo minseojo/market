@@ -32,7 +32,9 @@ footer {
 }
 
 
-
+span {
+    color: black;
+}
 
 h1 {
     font-size: 36px;
@@ -103,7 +105,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 3fr;
     grid-template-rows: 70px auto 50px;
-    grid-template-areas: 'header header' 'side main' 'footer footer';
+    grid-template-areas: 'header header' 'main main' 'footer footer';
 }
 
 
