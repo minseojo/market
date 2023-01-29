@@ -2,9 +2,12 @@ package demo.demo.service;
 
 import demo.demo.domain.Product;
 import demo.demo.repository.ProductRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+
 
 public class ProductService {
 

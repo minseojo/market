@@ -6,9 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="index.css" />
-  <title>Document</title>
+  <title>home</title>
 </head>
 <body>
+
 <header>
   <a href="/products/new">상품 등록</a>
   <a href="/products">상품 목록</a>
@@ -22,14 +23,20 @@
         <button type="submit" hidden="hidden"></button>
       </form>
       <li><button id="button">채팅하기</button></li>
+      <form>
+        <input name="file" id="files" type="file" multiple="multiple">
+        <button type="submit">이미지 삽입</button>
+      </form>
     </ul>
   </nav>
 </header>
 
 <main>
-  <div class="mainContainer">
-    <div>
+  <div >
+    <div class="mainContainer">
       <table>
+
+
         <tbody>
         <tr th:each="product : ${products}">
           <td th:text="${product.name}"></td>
@@ -40,6 +47,7 @@
     </div>
   </div>
 </main>
+
 <footer>footer</footer>
 </body>
 </html>

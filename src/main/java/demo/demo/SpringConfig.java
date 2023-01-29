@@ -13,9 +13,9 @@ public class SpringConfig {
     public ProductService productService() {
         return new ProductService(productRepository());
     }
-
     @Bean
     public ProductRepository productRepository() {
         return new MemoryProductRepository();
     }
+
 }

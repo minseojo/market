@@ -1,10 +1,13 @@
 package demo.demo.repository;
 
+import demo.demo.domain.File;
 import demo.demo.domain.Product;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Repository
 public class MemoryProductRepository implements ProductRepository{
     private static Map<Long, Product> store = new HashMap<>();
     private static long sequence = 0L;
@@ -39,6 +42,7 @@ public class MemoryProductRepository implements ProductRepository{
     public List<Product> findAll() {
         return new ArrayList<>(store.values());
     }
+
 
     //test - after
     public void clearStore() {
