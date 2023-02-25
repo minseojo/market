@@ -4,8 +4,13 @@
     display: flex;
     flex-direction: column;
     flex-basis: 33.3%;
-
 }
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
 .item {
     display: flex;
     justify-content: space-around;

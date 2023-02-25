@@ -14,8 +14,10 @@
 <div class="container">
   <div>
         <div class="item" th:each="product : ${products}">
-        <td th:text="${product.name}"></td>
-        <td data-th-text="|${product.price}원|"></td>
+            <td th:text="${product.name}"></td>
+            <td data-th-text="|${product.price}원|"></td>
+            <td data-th-text="|${product.category}|"></td>
+        </div>
   </div>
 </div> <!-- /container -->
 </main>
