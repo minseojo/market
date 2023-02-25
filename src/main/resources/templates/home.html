@@ -12,9 +12,9 @@
   <header>
     <a href="/products/new">상품 등록</a>
     <a href="/products">상품 목록</a>
-    <h1>개발 마켓</h1>
     <nav>
       <ul>
+        <h1>개발 마켓</h1>
         <form action="/search" method="get">
           <div class="form-group">
             <input  name="name" id="input" type="text" placeholder="물품을 검색해보세요.">
@@ -31,11 +31,10 @@
   </header>
 
   <main>
-
       <div th:each="product : ${products}">
-        <td th:text="${product.name}"></td>
-        <td data-th-text="|${product.price}원|"></td>
-        <td data-th-text="|${product.category}|"></td>
+        <p th:text="${product.name}"></p>
+        <p data-th-text="|${product.price}원|"></p>
+        <p data-th-text="|${product.category}|"></p>
     </div>
   </main>
 
