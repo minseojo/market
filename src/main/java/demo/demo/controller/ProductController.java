@@ -31,6 +31,7 @@ public class ProductController {
         Product product = new Product();
         product.setName(form.getName());
         product.setPrice(form.getPrice());
+        product.setCategory(form.getCategory());
         productService.create(product);
         return "redirect:/";
     }

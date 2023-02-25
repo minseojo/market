@@ -3,7 +3,7 @@ package demo.demo.domain;
 public class Product {
     private Long Id;
     private String name;
-    private int price;
+    private Long price;
     private String category;
 
     public Long getId() {
@@ -22,11 +22,11 @@ public class Product {
         this.name = name;
     }
 
-    public int getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 

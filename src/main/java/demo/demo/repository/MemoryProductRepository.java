@@ -32,7 +32,6 @@ public class MemoryProductRepository implements ProductRepository{
 
     @Override
     public List<Product> findByFilter(String name) {
-
         return store.values().stream()
                 .filter(member -> member.getName().equals(name))
                 .collect(Collectors.toList());
