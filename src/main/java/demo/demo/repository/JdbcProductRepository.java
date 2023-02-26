@@ -26,7 +26,7 @@ public class JdbcProductRepository implements ProductRepository {
             pstmt = conn.prepareStatement(sql,
                     Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, product.getName());
-            pstmt.setLong(2, product.getPrice());
+            pstmt.setString(2, product.getPrice());
             pstmt.setString(3, product.getCategory());
             pstmt.executeUpdate();
             rs = pstmt.getGeneratedKeys();
@@ -60,7 +60,7 @@ public class JdbcProductRepository implements ProductRepository {
                 Product product = new Product();
                 product.setId(rs.getLong("id"));
                 product.setName(rs.getString("name"));
-                product.setPrice(rs.getLong("price"));
+                product.setPrice(rs.getString("price"));
                 product.setCategory(rs.getString("category"));
                 return Optional.of(product);
             } else {
@@ -72,31 +72,10 @@ public class JdbcProductRepository implements ProductRepository {
             close(conn, pstmt, rs);
         }
     }
+
     @Override
-    public List<Product> findAll() {
-        String sql = "select * from Product";
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            conn = getConnection();
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-            List<Product> products = new ArrayList<>();
-            while(rs.next()) {
-                Product product = new Product();
-                product.setId(rs.getLong("id"));
-                product.setName(rs.getString("name"));
-                product.setPrice(rs.getLong("price"));
-                product.setCategory(rs.getString("category"));
-                products.add(product);
-            }
-            return products;
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        } finally {
-            close(conn, pstmt, rs);
-        }
+    public Optional<Product> findByName(String name) {
+        return Optional.empty();
     }
 
     public List<Product> findLimit() {
@@ -114,7 +93,7 @@ public class JdbcProductRepository implements ProductRepository {
                 Product product = new Product();
                 product.setId(rs.getLong("id"));
                 product.setName(rs.getString("name"));
-                product.setPrice(rs.getLong("price"));
+                product.setPrice(rs.getString("price"));
                 product.setCategory(rs.getString("category"));
                 products.add(product);
             }
@@ -126,31 +105,52 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
 
-    @Override
-    public List<Product> findByFilter(String name) {
-        return null;
-    }
-
-    @Override
-    public Optional<Product> findByName(String name) {
-        String sql = "select * from Product where name = ?";
+    public List<Product> findAllByName(String name) {
+        String sql = "select * from Product where name like '%name'";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
             conn = getConnection();
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, name);
             rs = pstmt.executeQuery();
-            if(rs.next()) {
+            List<Product> products = new ArrayList<>();
+            while(rs.next()) {
                 Product product = new Product();
                 product.setId(rs.getLong("id"));
                 product.setName(rs.getString("name"));
-                product.setPrice(rs.getLong("price"));
+                product.setPrice(rs.getString("price"));
                 product.setCategory(rs.getString("category"));
-                return Optional.of(product);
+                products.add(product);
             }
-            return Optional.empty();
+            return products;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+    @Override
+    public List<Product> findByFilter(String name) {
+        String sql = "select * from Product where name like ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%"+name+"%");
+            rs = pstmt.executeQuery();
+            List<Product> products = new ArrayList<>();
+            while(rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getLong("id"));
+                product.setName(rs.getString("name"));
+                product.setPrice(rs.getString("price"));
+                product.setCategory(rs.getString("category"));
+                products.add(product);
+            }
+            return products;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         } finally {
@@ -173,7 +173,7 @@ public class JdbcProductRepository implements ProductRepository {
                 Product product = new Product();
                 product.setId(rs.getLong("id"));
                 product.setName(rs.getString("name"));
-                product.setPrice(rs.getLong("price"));
+                product.setPrice(rs.getString("price"));
                 product.setCategory(rs.getString("category"));
                 return Optional.of(product);
             }
@@ -185,7 +185,32 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
 
-
+    @Override
+    public List<Product> findAll() {
+        String sql = "select * from Product";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            List<Product> products = new ArrayList<>();
+            while(rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getLong("id"));
+                product.setName(rs.getString("name"));
+                product.setPrice(rs.getString("price"));
+                product.setCategory(rs.getString("category"));
+                products.add(product);
+            }
+            return products;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
     private Connection getConnection() {
         return DataSourceUtils.getConnection(dataSource);
     }

@@ -25,7 +25,12 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+
     public List<Product> findProduct(String name) {
+        return productRepository.findByFilter(name);
+    }
+
+    public List<Product> findAllProductByName(String name) {
         return productRepository.findByFilter(name);
     }
 

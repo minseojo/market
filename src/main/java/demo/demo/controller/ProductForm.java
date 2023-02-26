@@ -3,7 +3,7 @@ package demo.demo.controller;
 public class ProductForm {
     private Long id;
     private String name;
-    private Long price;
+    private String price;
     private String category;
 
     public Long getId() {
@@ -22,11 +22,11 @@ public class ProductForm {
         this.name = name;
     }
 
-    public Long getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
