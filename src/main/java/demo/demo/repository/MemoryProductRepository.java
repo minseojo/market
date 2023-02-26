@@ -38,6 +38,11 @@ public class MemoryProductRepository implements ProductRepository{
     }
 
     @Override
+    public Optional<Product> findByCategory(String category) {
+        return Optional.empty();
+    }
+
+    @Override
     public List<Product> findAll() {
         return new ArrayList<>(store.values());
     }

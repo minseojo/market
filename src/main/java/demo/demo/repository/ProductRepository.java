@@ -7,10 +7,13 @@ import java.util.Optional;
 
 
 public interface ProductRepository {
+
     Product sava(Product product);
     Optional<Product> findById(Long id);
     Optional<Product> findByName(String name);
     List<Product> findAll();
 
     List<Product> findByFilter(String name);
+
+    Optional<Product> findByCategory(String category);
 }

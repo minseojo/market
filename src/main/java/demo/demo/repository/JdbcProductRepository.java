@@ -13,6 +13,8 @@ public class JdbcProductRepository implements ProductRepository {
     public JdbcProductRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
+    long generatedId = 0;
+
     @Override
     public Product sava(Product product) {
         String sql = "insert into Product(name, price, category) values(?,?,?)";
@@ -30,6 +32,7 @@ public class JdbcProductRepository implements ProductRepository {
             rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
                 product.setId(rs.getLong(1));
+                generatedId = rs.getLong(1);
             } else {
                 throw new SQLException("id 조회 실패");
             }
@@ -96,6 +99,33 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
 
+    public List<Product> findLimit() {
+        String sql = "select * from Product" +
+                    " limit 6";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            List<Product> products = new ArrayList<>();
+            while(rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getLong("id"));
+                product.setName(rs.getString("name"));
+                product.setPrice(rs.getLong("price"));
+                product.setCategory(rs.getString("category"));
+                products.add(product);
+            }
+            return products;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
     @Override
     public List<Product> findByFilter(String name) {
         return null;
@@ -127,6 +157,35 @@ public class JdbcProductRepository implements ProductRepository {
             close(conn, pstmt, rs);
         }
     }
+
+    @Override
+    public Optional<Product> findByCategory(String category) {
+        String sql = "select * from Product where category = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, category);
+            rs = pstmt.executeQuery();
+            if(rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getLong("id"));
+                product.setName(rs.getString("name"));
+                product.setPrice(rs.getLong("price"));
+                product.setCategory(rs.getString("category"));
+                return Optional.of(product);
+            }
+            return Optional.empty();
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
+
     private Connection getConnection() {
         return DataSourceUtils.getConnection(dataSource);
     }
