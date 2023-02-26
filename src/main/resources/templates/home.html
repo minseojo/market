@@ -10,18 +10,24 @@
 </head>
 <body>
   <header>
-    <a href="/products/new">상품 등록</a>
-    <a href="/products">상품 목록</a>
     <nav>
       <ul>
-        <h1>개발 마켓</h1>
+
+
+        <span class="market">개발 마켓</span>
+        <li><button class="chat" id="button2">중고 거래</button></li>
+        <a class="a" href="/products/new">상품 등록</a>
+        <a class="a" href="/products">상품 목록</a>
+
         <form action="/search" method="get">
           <div class="form-group">
-            <input  name="name" id="input" type="text" placeholder="물품을 검색해보세요.">
+            <input class="search" name="name" id="input" type="text" placeholder="물품을 검색해보세요.">
           </div>
           <button type="submit" hidden="hidden"></button>
         </form>
-        <li><button id="button">채팅하기</button></li>
+
+          <li><button class="chat" id="button">채팅하기</button></li>
+
         <form>
           <input name="file" id="files" type="file" multiple="multiple">
           <button type="submit">이미지 삽입</button>
@@ -31,10 +37,13 @@
   </header>
 
   <main>
-      <div th:each="product : ${products}">
-        <p th:text="${product.name}"></p>
-        <p data-th-text="|${product.price}원|"></p>
-        <p data-th-text="|${product.category}|"></p>
+    <h1 class="h1">중고거래 최근 매물</h1>
+    <div class="container">
+      <div class="item" th:each="product : ${products}">
+        <img class="image" src="images/image.jpeg" alt="My Image">
+        <p class="name" th:text="${product.name}"></p>
+        <p class="price" data-th-text="|${product.price}원|"></p>
+      </div>
     </div>
   </main>
 

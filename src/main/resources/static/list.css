@@ -18,6 +18,7 @@
     color: black;
     background-color: beige;
 }
+
 .h1 {
     display: block;
     text-align: center;
@@ -58,6 +59,7 @@ header {
     color: black;
 }
 nav {
+    margin-left: 8rem;
     display: inline-block;
     vertical-align: middle;
 }
@@ -76,8 +78,8 @@ ul {
     color: black;
 }
 
-.input {
-    padding-left: 0.6px;
+.search {
+    padding-left: 0.6rem;
     width: 15rem;
     height: 2rem;
     font-size: 1rem;
