@@ -23,7 +23,8 @@ class MemoryProductRepositoryTest {
     void sava() {
         Product product = new Product();
         product.setName("청소기");
-
+        product.setPrice(1000L);
+        product.setCategory("디지털가전");
         productRepository.sava(product);
         Product product1 = productRepository.findById(product.getId()).get();
         Assertions.assertThat(product).isEqualTo(product1);
