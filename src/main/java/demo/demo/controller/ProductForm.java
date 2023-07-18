@@ -1,13 +1,26 @@
 package demo.demo.controller;
 
+import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class ProductForm {
     private Long id;
+
+    @NotBlank
     private String name;
-    private String price;
+
+    @NotNull
+    @Range(min = 0, max = 999999999)
+    private Integer price;
+
+    @NotNull
+    // 체크로 고르게 끔. 즉 공백일 가능성은 제로, 하나를 무조건 선택해야함
     private String category;
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -22,11 +35,11 @@ public class ProductForm {
         this.name = name;
     }
 
-    public String getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
