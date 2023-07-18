@@ -19,11 +19,12 @@ public class SpringConfig {
         this.dataSource = dataSource;
     }
 
-    @Bean
+    //@Bean
     public ProductService productService() {
         return new ProductService(productRepository());
     }
-    @Bean
+
+    //@Bean
     public ProductRepository productRepository() {
         //return new MemoryProductRepository();
         return new JdbcProductRepository(dataSource);

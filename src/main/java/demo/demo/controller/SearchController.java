@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @Controller
 public class SearchController {
-
     private ProductService productService;
 
     @Autowired

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Repository
+
 public class MemoryProductRepository implements ProductRepository{
     private static Map<Long, Product> store = new HashMap<>();
     private static long sequence = 0L;
@@ -30,6 +30,10 @@ public class MemoryProductRepository implements ProductRepository{
                 .findAny();
     }
 
+    @Override
+    public List<Product> findLimitTwenty() {
+        return store.values().stream().collect(Collectors.toList());
+    }
     @Override
     public List<Product> findByFilter(String name) {
         return store.values().stream()

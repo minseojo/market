@@ -61,7 +61,6 @@ header {
 nav {
     margin-left: 8rem;
     display: inline-block;
-    vertical-align: middle;
 }
 ul {
     display: flex;

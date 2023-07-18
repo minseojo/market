@@ -1,15 +1,21 @@
 package demo.demo.repository;
 
 import demo.demo.domain.Product;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.stereotype.Repository;
+
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+@Repository
 public class JdbcProductRepository implements ProductRepository {
     private final DataSource dataSource;
 
+    @Autowired
     public JdbcProductRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -26,7 +32,7 @@ public class JdbcProductRepository implements ProductRepository {
             pstmt = conn.prepareStatement(sql,
                     Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, product.getName());
-            pstmt.setString(2, product.getPrice());
+            pstmt.setInt(2, product.getPrice());
             pstmt.setString(3, product.getCategory());
             pstmt.executeUpdate();
             rs = pstmt.getGeneratedKeys();
@@ -60,7 +66,7 @@ public class JdbcProductRepository implements ProductRepository {
                 Product product = new Product();
                 product.setId(rs.getLong("id"));
                 product.setName(rs.getString("name"));
-                product.setPrice(rs.getString("price"));
+                product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
                 return Optional.of(product);
             } else {
@@ -78,9 +84,10 @@ public class JdbcProductRepository implements ProductRepository {
         return Optional.empty();
     }
 
-    public List<Product> findLimit() {
-        String sql = "select * from Product" +
-                    " limit 6";
+    public List<Product> findLimitTwenty() {
+        String sql = "select * from Product"
+                + " order by id desc"
+                + " limit 8";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -93,7 +100,7 @@ public class JdbcProductRepository implements ProductRepository {
                 Product product = new Product();
                 product.setId(rs.getLong("id"));
                 product.setName(rs.getString("name"));
-                product.setPrice(rs.getString("price"));
+                product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
                 products.add(product);
             }
@@ -119,7 +126,7 @@ public class JdbcProductRepository implements ProductRepository {
                 Product product = new Product();
                 product.setId(rs.getLong("id"));
                 product.setName(rs.getString("name"));
-                product.setPrice(rs.getString("price"));
+                product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
                 products.add(product);
             }
@@ -146,7 +153,7 @@ public class JdbcProductRepository implements ProductRepository {
                 Product product = new Product();
                 product.setId(rs.getLong("id"));
                 product.setName(rs.getString("name"));
-                product.setPrice(rs.getString("price"));
+                product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
                 products.add(product);
             }
@@ -173,7 +180,7 @@ public class JdbcProductRepository implements ProductRepository {
                 Product product = new Product();
                 product.setId(rs.getLong("id"));
                 product.setName(rs.getString("name"));
-                product.setPrice(rs.getString("price"));
+                product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
                 return Optional.of(product);
             }
@@ -200,7 +207,7 @@ public class JdbcProductRepository implements ProductRepository {
                 Product product = new Product();
                 product.setId(rs.getLong("id"));
                 product.setName(rs.getString("name"));
-                product.setPrice(rs.getString("price"));
+                product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
                 products.add(product);
             }

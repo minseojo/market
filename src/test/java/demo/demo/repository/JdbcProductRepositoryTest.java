@@ -36,7 +36,7 @@ class JdbcProductRepositoryTest {
     void sava() {
         Product product = new Product();
         product.setName("물");
-        product.setPrice(1000L);
+        product.setPrice(1000);
         product.setCategory("음식");
         Product product3 = productRepository.sava(product);
 

@@ -30,7 +30,7 @@ public class ProductController {
     public String create(ProductForm form) {
         Product product = new Product();
         product.setName(form.getName());
-        product.setPrice(form.getPrice());
+        product.setPrice(Integer.parseInt(form.getPrice()));
         product.setCategory(form.getCategory());
         productService.create(product);
         return "redirect:/";
