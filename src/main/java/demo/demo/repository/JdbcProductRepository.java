@@ -1,6 +1,7 @@
 package demo.demo.repository;
 
 import demo.demo.domain.Product;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
@@ -12,13 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class JdbcProductRepository implements ProductRepository {
     private final DataSource dataSource;
-
-    @Autowired
-    public JdbcProductRepository(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
     long generatedId = 0;
 
     @Override

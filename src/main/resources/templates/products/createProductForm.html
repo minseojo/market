@@ -11,15 +11,19 @@
 
 <body>
 <div class="container">
-  <form action="/products/new" method="post">
+
+  <form action="/products/new" method="post" enctype="multipart/form-data">
     <div class="form-group">
       <label for="name">상품 이름</label>
       <input type="text" id="name" name="name" placeholder="상품이름을 입력하세요">
       <input type="text" id="price" name="price" placeholder="가격을 입력하세요">
       <input type="text" id="category" name="category" placeholder="카테고리를 입력하세요">
     </div>
+    <h4>이미지 업로드</h4>
+    <input type="file" multiple="multiple" name="imageFiles">
     <button type="submit">등록</button>
   </form>
+
 </div> <!-- /container -->
 </body>
 </html>

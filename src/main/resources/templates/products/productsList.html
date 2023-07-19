@@ -29,7 +29,7 @@
     <h1 class="h1">중고거래 매물</h1>
 <div>
   <div class="container">
-        <div class="item" th:each="product : ${products}">
+        <div class="product" th:each="product : ${products}">
             <img class="image" src="images/image.jpeg" alt="My Image">
             <p class="name" th:text="${product.name}"></p>
             <p class="price" data-th-text="|${product.price}원|"></p>

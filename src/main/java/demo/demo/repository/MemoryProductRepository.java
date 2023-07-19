@@ -1,6 +1,6 @@
 package demo.demo.repository;
 
-import demo.demo.domain.File;
+
 import demo.demo.domain.Product;
 import org.springframework.stereotype.Repository;
 
