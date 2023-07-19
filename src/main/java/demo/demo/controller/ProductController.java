@@ -6,12 +6,10 @@ import demo.demo.repository.FileRepository;
 import demo.demo.service.FileService;
 import demo.demo.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -31,7 +29,6 @@ public class ProductController {
     private final ProductService productService;
 
     private final FileService fileService;
-    private final FileRepository fileRepository;
 
     @GetMapping("/products")
     public String getAllList(Model model) {
@@ -46,7 +43,7 @@ public class ProductController {
     }
 
     @PostMapping("/products/new")
-    public String create(@Valid @ModelAttribute ProductForm form, @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles, BindingResult result, RedirectAttributes redirectAttributes) throws IOException {
+    public String create(@Valid @ModelAttribute ProductForm form, BindingResult result, RedirectAttributes redirectAttributes) throws IOException {
         if (result.hasErrors()) {
             System.out.println("result = " + result);
             return "products/createProductForm";
@@ -57,21 +54,33 @@ public class ProductController {
         product.setPrice(form.getPrice());
         product.setCategory(form.getCategory());
 
-        List<UploadFile> storeImageFiles = fileService.storeFiles(imageFiles);
+        List<UploadFile> storeImageFiles = fileService.storeFiles(product, form.getImageFiles());
         product.setImageFiles(storeImageFiles);
-        for (UploadFile imageFile : storeImageFiles) {
-            fileRepository.sava(imageFile);
-        }
         productService.create(product);
+        for (UploadFile storeImageFile : storeImageFiles) {
+            fileService.sava(product, storeImageFile);
+        }
 
-        //redirectAttributes.addAttribute("productId", product.getId());
-        return "redirect:/";
-        //return "redirect:/products/{productId}";
+        redirectAttributes.addAttribute("productId", product.getId());
+       // return "redirect:/";
+        return "redirect:/products/{productId}";
     }
 
-    @GetMapping("/products/{productId}")
-    public String getProduct() {
-        return null;
+
+    @GetMapping("/products/{id}")
+    public String products(@PathVariable Long id, Model model) {
+        List<UploadFile> uploadFiles = fileService.getFiles(id);
+        Optional<Product> product = productService.findById(id);
+        model.addAttribute("product", product);
+        model.addAttribute("uploadFiles", uploadFiles);
+        System.out.println(Optional.ofNullable(uploadFiles.get(0).getStoreFileName()));
+        return "products/product-view";
+    }
+
+    @ResponseBody
+    @GetMapping("/images/{filename}")
+    public UrlResource downloadImage(@PathVariable String filename) throws MalformedURLException {
+        return new UrlResource("file:" + fileService.getFullPath(filename));
     }
 
 }

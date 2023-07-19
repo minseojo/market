@@ -1,6 +1,7 @@
 package demo.demo.service;
 
 import demo.demo.domain.Product;
+import demo.demo.domain.UploadFile;
 import demo.demo.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

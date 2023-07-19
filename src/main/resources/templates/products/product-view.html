@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<main>
+<body>
+<div class="container">
+    <h2>상품 조회</h2> </div>
+    <p class="name" th:text="${product.get().name}"></p>
+    <p class="price" data-th-text="|${product.get().price}원|"></p>
+    <p class="category" th:text="${product.get().category}"></p>
+<img th:each="imageFile : ${uploadFiles}" th:src="|/images/${imageFile.getStoreFileName()}|" width="300" height="300"/>
+
+</div>
+
+</body>
+</main>
+</html>
+

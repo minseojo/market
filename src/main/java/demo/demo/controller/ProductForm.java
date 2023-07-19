@@ -25,6 +25,6 @@ public class ProductForm {
     // 체크로 고르게 끔. 즉 공백일 가능성은 제로, 하나를 무조건 선택해야함
     private String category;
 
-    private List<MultipartFile> imagesFiles;
+    private List<MultipartFile> imageFiles;
 
 }

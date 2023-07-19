@@ -10,8 +10,12 @@ public class UploadFile {
      */
     private String uploadFileName;
     private String storeFileName;
-    public UploadFile(String uploadFileName, String storeFileName) {
+    private Long productId;
+
+    public UploadFile(){}
+    public UploadFile(String uploadFileName, String storeFileName, Long productId) {
         this.uploadFileName = uploadFileName;
         this.storeFileName = storeFileName;
+        this.productId = productId;
     }
 }
