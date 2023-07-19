@@ -72,8 +72,9 @@ public class ProductController {
         List<UploadFile> uploadFiles = fileService.getFiles(id);
         Optional<Product> product = productService.findById(id);
         model.addAttribute("product", product);
-        model.addAttribute("uploadFiles", uploadFiles);
-        System.out.println(Optional.ofNullable(uploadFiles.get(0).getStoreFileName()));
+        if(uploadFiles != null) {
+            model.addAttribute("uploadFiles", uploadFiles);
+        }
         return "products/product-view";
     }
 

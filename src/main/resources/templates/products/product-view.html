@@ -12,7 +12,7 @@
     <p class="name" th:text="${product.get().name}"></p>
     <p class="price" data-th-text="|${product.get().price}원|"></p>
     <p class="category" th:text="${product.get().category}"></p>
-<img th:each="imageFile : ${uploadFiles}" th:src="|/images/${imageFile.getStoreFileName()}|" width="300" height="300"/>
+<img th:each="imageFile : ${uploadFiles}" th:src="|/images/${imageFile.getStoreFileName()}|" th:if="${imageFile}" width="300" height="300"/>
 
 </div>
 
