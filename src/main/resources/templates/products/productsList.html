@@ -8,13 +8,16 @@
   <link rel="stylesheet" href="list.css" />
   <title>productsList</title>
 </head>
-
+<style>
+    a.market {
+        text-decoration: none;
+    }
+</style>
 <body>
     <header>
         <nav>
             <ul>
-                <span class="market">개발 마켓</span>
-
+                <a class="market" href="/">개발 마켓</a>
                 <form action="/search" method="get">
                     <div class="form-group">
                         <input class="search" name="name" id="input" type="text" placeholder="물품을 검색해보세요.">

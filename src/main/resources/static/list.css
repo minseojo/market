@@ -93,7 +93,13 @@ ul {
 }
 
 
-
+.market {
+    font-size: 2rem;
+    font-weight: bold;
+    text-decoration: none;
+    margin-right: 2rem;
+    color: black;
+}
 
 footer {
     display: flex;
