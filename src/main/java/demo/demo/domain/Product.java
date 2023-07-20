@@ -26,5 +26,6 @@ public class Product{
     private String category;
 
     private List<UploadFile> imageFiles;
+    private String stringImageFiles;
 
 }

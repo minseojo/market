@@ -1,8 +1,8 @@
 package demo.demo.repository;
 
 import demo.demo.domain.Product;
+import demo.demo.domain.UploadFile;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
@@ -18,19 +18,36 @@ public class JdbcProductRepository implements ProductRepository {
     private final DataSource dataSource;
     long generatedId = 0;
 
+
+    private String connectImageFiles(Product product) {
+        StringBuilder imagesFileNames = new StringBuilder();
+        for (UploadFile imageFile : product.getImageFiles()) {
+            imagesFileNames.append(imageFile.getStoreFileName() + ",");
+        }
+        // 마지막에 추가된 구분자(',')를 삭제
+        if(imagesFileNames.length() > 0) {
+            imagesFileNames.delete(imagesFileNames.length() - 1, imagesFileNames.length());
+        }
+
+        return String.valueOf(imagesFileNames);
+    }
     @Override
     public Product sava(Product product) {
-        String sql = "insert into Product(name, price, category) values(?,?,?)";
+        String sql = "insert into Product(name, price, category, images) values(?,?,?,?)";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+
+        // 이미지 파일들 (',') 구분자로 구분해서 연결
+        String imageFileNames = connectImageFiles(product);
+        System.out.println(imageFileNames);
         try {
             conn = getConnection();
-            pstmt = conn.prepareStatement(sql,
-                    Statement.RETURN_GENERATED_KEYS);
+            pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, product.getName());
             pstmt.setInt(2, product.getPrice());
             pstmt.setString(3, product.getCategory());
+            pstmt.setString(4, String.valueOf(imageFileNames));
             pstmt.executeUpdate();
             rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
@@ -46,7 +63,6 @@ public class JdbcProductRepository implements ProductRepository {
             close(conn, pstmt, rs);
         }
     }
-
 
     @Override
     public Optional<Product> findById(Long id) {
@@ -65,6 +81,7 @@ public class JdbcProductRepository implements ProductRepository {
                 product.setName(rs.getString("name"));
                 product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
+                product.setStringImageFiles(rs.getString("images"));
                 return Optional.of(product);
             } else {
                 return Optional.empty();

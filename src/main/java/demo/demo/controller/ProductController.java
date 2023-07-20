@@ -2,7 +2,6 @@ package demo.demo.controller;
 
 import demo.demo.domain.Product;
 import demo.demo.domain.UploadFile;
-import demo.demo.repository.FileRepository;
 import demo.demo.service.FileService;
 import demo.demo.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -54,12 +50,9 @@ public class ProductController {
         product.setPrice(form.getPrice());
         product.setCategory(form.getCategory());
 
-        List<UploadFile> storeImageFiles = fileService.storeFiles(product, form.getImageFiles());
+        List<UploadFile> storeImageFiles = fileService.storeFiles(form.getImageFiles());
         product.setImageFiles(storeImageFiles);
         productService.create(product);
-        for (UploadFile storeImageFile : storeImageFiles) {
-            fileService.sava(product, storeImageFile);
-        }
 
         redirectAttributes.addAttribute("productId", product.getId());
        // return "redirect:/";
@@ -69,12 +62,9 @@ public class ProductController {
 
     @GetMapping("/products/{id}")
     public String products(@PathVariable Long id, Model model) {
-        List<UploadFile> uploadFiles = fileService.getFiles(id);
         Optional<Product> product = productService.findById(id);
+
         model.addAttribute("product", product);
-        if(uploadFiles != null) {
-            model.addAttribute("uploadFiles", uploadFiles);
-        }
         return "products/product-view";
     }
 
