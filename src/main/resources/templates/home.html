@@ -15,7 +15,7 @@
 
 
         <span class="market">개발 마켓</span>
-        <li><button class="chat" id="button2">중고 거래</button></li>
+
         <a class="a" href="/products/new">상품 등록</a>
         <a class="a" href="/products">상품 목록</a>
 
@@ -34,12 +34,16 @@
   <main>
     <h1 class="h1">중고거래 최근 매물</h1>
     <div class="container">
+
       <div class="item" th:each="product : ${products}">
-        <img class="image" src="images/image.jpeg" alt="My Image">
-        <p class="name" th:text="${product.name}"></p>
-        <p class="price" data-th-text="|${product.price}원|"></p>
+          <!-- 이미지를 동적으로 설정 -->
+          <img id="image" th:src="|/images/${#strings.substringBefore(product.getStringImageFiles(), ',')}|" th:width="200" th:height="200">
+          <p class="name" th:text="|상품명: ${product.name}|"></p>
+          <p class="price" th:text="|가격: ${product.price}원|"></p>
+          <p class="category" th:text="|종류: ${product.category}|"></p>
       </div>
     </div>
+
   </main>
 
   <footer>footer</footer>

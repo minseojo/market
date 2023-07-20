@@ -39,7 +39,7 @@
 
         <button onclick="showPrevImage()">이전</button>
         <button onclick="showNextImage()">다음</button>
-        <img id="image" th:src="|/images/${imageFileNames[0]}|">
+        <img id="image" th:src="|/images/${imageFileNames[0]}|" th:width="300" th:height="300">
 
     </div>
 </body>

@@ -26,6 +26,8 @@ public class Product{
     private String category;
 
     private List<UploadFile> imageFiles;
+
+    //images (db)
     private String stringImageFiles;
 
 }

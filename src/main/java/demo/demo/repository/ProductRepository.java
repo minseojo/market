@@ -14,6 +14,7 @@ public interface ProductRepository {
     // 상품 아이디로 찾기
     Optional<Product> findById(Long id);
 
+
     // 상품 이름으로 찾기
     Optional<Product> findByName(String name);
 

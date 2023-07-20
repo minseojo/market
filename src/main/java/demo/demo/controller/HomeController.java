@@ -26,7 +26,7 @@ public class HomeController {
     */
     @GetMapping("/")
     private ModelAndView home() throws Exception {
-        List<Product> products = productService.findAllProduct();
+        List<Product> products = productService.findLimitTwenty();
         ModelAndView mv = new ModelAndView("home");
         mv.addObject("products", products);
         return mv;

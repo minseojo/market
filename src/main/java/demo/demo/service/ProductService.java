@@ -20,8 +20,9 @@ public class ProductService {
         return product.getId();
     }
 
+    public List<Product> findLimitTwenty() {return productRepository.findLimitTwenty();}
     public List<Product> findAllProduct() {
-        return productRepository.findLimitTwenty();
+        return productRepository.findAll();
     }
 
     public Optional<Product> findById(Long id) {return productRepository.findById(id);}

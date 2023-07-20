@@ -24,11 +24,6 @@ public class JdbcProductRepository implements ProductRepository {
         for (UploadFile imageFile : product.getImageFiles()) {
             imagesFileNames.append(imageFile.getStoreFileName() + ",");
         }
-        // 마지막에 추가된 구분자(',')를 삭제
-        if(imagesFileNames.length() > 0) {
-            imagesFileNames.delete(imagesFileNames.length() - 1, imagesFileNames.length());
-        }
-
         return String.valueOf(imagesFileNames);
     }
     @Override
@@ -98,6 +93,7 @@ public class JdbcProductRepository implements ProductRepository {
         return Optional.empty();
     }
 
+
     public List<Product> findLimitTwenty() {
         String sql = "select * from Product"
                 + " order by id desc"
@@ -116,6 +112,7 @@ public class JdbcProductRepository implements ProductRepository {
                 product.setName(rs.getString("name"));
                 product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
+                product.setStringImageFiles(rs.getString("images"));
                 products.add(product);
             }
             return products;
@@ -169,6 +166,7 @@ public class JdbcProductRepository implements ProductRepository {
                 product.setName(rs.getString("name"));
                 product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
+                product.setStringImageFiles(rs.getNString("images"));
                 products.add(product);
             }
             return products;
@@ -223,6 +221,7 @@ public class JdbcProductRepository implements ProductRepository {
                 product.setName(rs.getString("name"));
                 product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
+                product.setStringImageFiles(rs.getString("images"));
                 products.add(product);
             }
             return products;
