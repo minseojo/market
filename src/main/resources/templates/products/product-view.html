@@ -4,22 +4,44 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 기존 스크립트는 제외하고 아래 내용으로 대체 -->
+    <script th:inline="javascript">
+        let imageIndex = 0;
+        let images = /*[[${imageFileNames}]]*/ [];
+        function showNextImage() {
+            let imgElement = document.getElementById('image');
+            imageIndex = (imageIndex + 1) % images.length;
+            let nextImage = images[imageIndex];
+            imgElement.src = "/images/" + nextImage;
+        }
+
+        function showPrevImage() {
+            let imgElement = document.getElementById('image');
+            if (imageIndex - 1 >= 0) {
+                imageIndex -= 1;
+            } else {
+                imageIndex = images.length - 1;
+            }
+            let prevImage = images[imageIndex];
+            imgElement.src = "/images/" + prevImage;
+        }
+    </script>
+
 </head>
 <main>
 <body>
-<div class="container">
-    <h2>상품 조회</h2> </div>
-    <p class="name" th:text="${product.get().name}"></p>
-    <p class="price" data-th-text="|${product.get().price}원|"></p>
-    <p class="category" th:text="${product.get().category}"></p>
-    <th:block th:with="imageFiles=${#strings.arraySplit(product.get().stringImageFiles, ',')}">
-        <!-- for-each 문을 사용하여 이미지 출력 -->
-        <div th:each="imageFile : ${imageFiles}" th:if="${imageFile}">
-            <img th:src="|/images/${imageFile}|" width="300" height="300"/>
-        </div>
-    </th:block>
-</div>
+    <div class="container">
+        <h2>상품 조회</h2> </div>
+        <p class="name" th:text="${product.get().name}"></p>
+        <p class="price" data-th-text="|${product.get().price}원|"></p>
+        <p class="category" th:text="${product.get().category}"></p>
 
+
+        <button onclick="showPrevImage()">이전</button>
+        <button onclick="showNextImage()">다음</button>
+        <img id="image" th:src="|/images/${imageFileNames[0]}|">
+
+    </div>
 </body>
 </main>
 </html>

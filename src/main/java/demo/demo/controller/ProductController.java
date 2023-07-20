@@ -14,8 +14,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -52,6 +54,7 @@ public class ProductController {
 
         List<UploadFile> storeImageFiles = fileService.storeFiles(form.getImageFiles());
         product.setImageFiles(storeImageFiles);
+        System.out.println(storeImageFiles);
         productService.create(product);
 
         redirectAttributes.addAttribute("productId", product.getId());
@@ -61,10 +64,14 @@ public class ProductController {
 
 
     @GetMapping("/products/{id}")
-    public String products(@PathVariable Long id, Model model) {
+    public String products(@PathVariable Long id, Model model){
         Optional<Product> product = productService.findById(id);
-
         model.addAttribute("product", product);
+
+        if (product.isPresent() && product.get().getStringImageFiles() != "") {
+            List<String> imageFileNames = List.of(product.get().getStringImageFiles().split(","));
+            model.addAttribute("imageFileNames", imageFileNames);
+        }
         return "products/product-view";
     }
 
