@@ -28,7 +28,7 @@ public class JdbcProductRepository implements ProductRepository {
     }
     @Override
     public Product sava(Product product) {
-        String sql = "insert into Product(name, price, category, images) values(?,?,?,?)";
+        String sql = "insert into Product(name, price, category, images, createDate) values(?,?,?,?,?)";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -43,6 +43,7 @@ public class JdbcProductRepository implements ProductRepository {
             pstmt.setInt(2, product.getPrice());
             pstmt.setString(3, product.getCategory());
             pstmt.setString(4, String.valueOf(imageFileNames));
+            pstmt.setString(5, String.valueOf(String.valueOf(product.getCreateDate())));
             pstmt.executeUpdate();
             rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
@@ -77,6 +78,7 @@ public class JdbcProductRepository implements ProductRepository {
                 product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
                 product.setStringImageFiles(rs.getString("images"));
+                product.setCreateDate(rs.getString("createDate"));
                 return Optional.of(product);
             } else {
                 return Optional.empty();
@@ -113,6 +115,7 @@ public class JdbcProductRepository implements ProductRepository {
                 product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
                 product.setStringImageFiles(rs.getString("images"));
+                product.setCreateDate(rs.getString("createDate"));
                 products.add(product);
             }
             return products;
@@ -167,6 +170,7 @@ public class JdbcProductRepository implements ProductRepository {
                 product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
                 product.setStringImageFiles(rs.getNString("images"));
+                product.setCreateDate(rs.getString("createDate"));
                 products.add(product);
             }
             return products;
@@ -194,6 +198,7 @@ public class JdbcProductRepository implements ProductRepository {
                 product.setName(rs.getString("name"));
                 product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
+                product.setCreateDate(rs.getString("createDate"));
                 return Optional.of(product);
             }
             return Optional.empty();
@@ -222,6 +227,7 @@ public class JdbcProductRepository implements ProductRepository {
                 product.setPrice(rs.getInt("price"));
                 product.setCategory(rs.getString("category"));
                 product.setStringImageFiles(rs.getString("images"));
+                product.setCreateDate(rs.getString("createDate"));
                 products.add(product);
             }
             return products;

@@ -6,7 +6,9 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -29,5 +31,8 @@ public class Product{
 
     //images (db)
     private String stringImageFiles;
+
+    //yyyy-MM-dd HH:mm:ss (mysql DateTime)
+    private String createDate;
 
 }

@@ -30,7 +30,6 @@ public class FileService {
         return storeFileResult;
     }
 
-
     public UploadFile storeFile (MultipartFile multipartFile) throws IOException {
         if (multipartFile.isEmpty()) {
             return null;

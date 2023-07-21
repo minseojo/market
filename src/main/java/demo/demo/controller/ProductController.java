@@ -4,6 +4,7 @@ import demo.demo.domain.Product;
 import demo.demo.domain.UploadFile;
 import demo.demo.service.FileService;
 import demo.demo.service.ProductService;
+import demo.demo.utility.Time;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
@@ -14,7 +15,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,6 +30,8 @@ public class ProductController {
     private final ProductService productService;
 
     private final FileService fileService;
+
+    private final Time time;
 
     @GetMapping("/products")
     public String getAllList(Model model) {
@@ -54,7 +59,11 @@ public class ProductController {
 
         List<UploadFile> storeImageFiles = fileService.storeFiles(form.getImageFiles());
         product.setImageFiles(storeImageFiles);
-        System.out.println(storeImageFiles);
+        String createTime = time.getTime();
+        if(createTime != "") {
+            product.setCreateDate(createTime);
+            System.out.println(createTime);
+        }
         productService.create(product);
 
         redirectAttributes.addAttribute("productId", product.getId());
