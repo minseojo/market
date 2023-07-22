@@ -33,12 +33,12 @@ public class LoginController {
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute LoginForm form, BindingResult result, RedirectAttributes redirectAttributes) throws IOException {
         String userId = form.getUserId();
-        System.out.println(userId);
         Optional<User> user = userService.findByUserId(userId);
-        System.out.println(user);
         if(user.isPresent()) {
-            redirectAttributes.addAttribute("id", user.get().getId());
-            return "redirect:/users/{id}";
+            if(form.getPassword().equals(user.get().getPassword())) {
+                redirectAttributes.addAttribute("id", user.get().getId());
+                return "redirect:/users/{id}";
+            }
         }
         return "redirect:/login";
     }
