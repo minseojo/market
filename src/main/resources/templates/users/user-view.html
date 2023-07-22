@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 기존 스크립트는 제외하고 아래 내용으로 대체 -->
+  <script th:inline="javascript">
+  </script>
+
+</head>
+<main>
+  <body>
+  <div class="container">
+    <h2>유저 조회</h2> </div>
+  <p class="nickname" th:text="|닉네임: ${user.get().nickname}|"></p>
+  <p class="userId" data-th-text="|아이디: ${user.get().userId}|"></p>
+  <p class="password" th:text="|비밀번호: ${user.get().password}|"></p>
+  <p class="name" th:text="|이름: ${user.get().name}|"></p>
+  <p class="email" data-th-text="|이메일: ${user.get().email}|"></p>
+  <p class="address" th:text="|주소: ${user.get().address}|"></p>
+  <p class="phoneNumber" th:text="|휴대폰 번호: ${user.get().phoneNumber}|"></p>
+  <p class="registrationDate" th:text="|가입일자:${user.get().registrationDate}|"></p>
+
+  <img id="image" th:src="|/images/default_profile.jpeg|" th:width="300" th:height="300">
+
+  </div>
+  </body>
+</main>
+</html>
+

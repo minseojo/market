@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <title>home</title>
+</head>
+
+<style>
+
+  nav {
+    margin-left: 8rem;
+    display: inline-block;
+  }
+  ul {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .market {
+    font-size: 2rem;
+    font-weight: bold;
+
+    margin-right: 2rem;
+    color: black;
+  }
+
+  a.market {
+    text-decoration: none;
+  }
+</style>
+
+<body>
+<header>
+  <nav>
+    <ul>
+      <a class="market" href="/">개발 마켓</a>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+  <div class="container">
+    <form action="/login" method="post" enctype="application/x-www-form-urlencoded">
+      <div class="form-group">
+        <input type="text" id="userId" name="userId" placeholder="아이디를 입력하세요">
+        <input type="text" id="password" name="password" placeholder="비밀번호를 입력하세요">
+        <button type="submit">로그인</button>
+      </div>
+    </form>
+
+    <a class="market" href="/signup">회원가입</a>
+    <button>아이디 찾기</button>
+    <button>비밀번호 찾기</button>
+  </div>
+
+</main>
+
+</body>
+</html>

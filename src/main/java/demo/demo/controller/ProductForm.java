@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 public class ProductForm {
-    private Long id;
 
     @NotBlank
     private String name;

@@ -62,7 +62,6 @@ public class ProductController {
         String createTime = time.getTime();
         if(createTime != "") {
             product.setCreateDate(createTime);
-            System.out.println(createTime);
         }
         productService.create(product);
 
