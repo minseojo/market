@@ -21,5 +21,5 @@ public class UserService {
     // 기본키
     public Optional<User> findById(Long id) {return userRepository.findById(id);}
 
-    public Optional<User> findByUserId(Long id) {return userRepository.findByUserId(id);}
+    public Optional<User> findByUserId(String userId) {return userRepository.findByUserId(userId);}
 }

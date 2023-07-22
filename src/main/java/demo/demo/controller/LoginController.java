@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,8 +32,15 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute LoginForm form, BindingResult result, RedirectAttributes redirectAttributes) throws IOException {
-
-        return "redirect:/";
+        String userId = form.getUserId();
+        System.out.println(userId);
+        Optional<User> user = userService.findByUserId(userId);
+        System.out.println(user);
+        if(user.isPresent()) {
+            redirectAttributes.addAttribute("id", user.get().getId());
+            return "redirect:/users/{id}";
+        }
+        return "redirect:/login";
     }
 
     @GetMapping("/signup")
@@ -54,8 +62,8 @@ public class LoginController {
 
         userService.create(user);
 
-        redirectAttributes.addAttribute("userId", user.getId());
-        return "redirect:/users/{userId}";
+        redirectAttributes.addAttribute("id", user.getId());
+        return "redirect:/users/{id}";
     }
 
 }

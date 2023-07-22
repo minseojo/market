@@ -78,7 +78,7 @@ public class JdbcUserRepository {
             close(conn, pstmt, rs);
         }
     }
-    public Optional<User> findByUserId(Long userId) {
+    public Optional<User> findByUserId(String userId) {
         String sql = "select * from User where userId = ?";
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -86,7 +86,7 @@ public class JdbcUserRepository {
         try {
             conn = getConnection();
             pstmt = conn.prepareStatement(sql);
-            pstmt.setLong(1, userId);
+            pstmt.setString(1, userId);
             rs = pstmt.executeQuery();
             if(rs.next()) {
                 User user = new User();
