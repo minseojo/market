@@ -11,6 +11,9 @@ public interface ProductRepository {
     // 상품 저장
     Product sava(Product product);
 
+    // 상품 수정
+    Product update(Product product);
+
     // 상품 아이디로 찾기
     Optional<Product> findById(Long id);
 

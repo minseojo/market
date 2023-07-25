@@ -41,7 +41,9 @@
         <button onclick="showNextImage()">다음</button>
         <img id="image" th:src="|/images/${imageFileNames[0]}|" th:width="300" th:height="300">
 
+     <button th:onclick="|location.href='/products/edit/${product.get().id}'|">상품 수정</button>
     </div>
+
 </body>
 </main>
 </html>

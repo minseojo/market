@@ -1,4 +1,4 @@
-package demo.demo.controller;
+package demo.demo.Form;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 public class ProductForm {
-
     @NotBlank
     private String name;
 

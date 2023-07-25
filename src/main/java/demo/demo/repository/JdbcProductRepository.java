@@ -35,7 +35,6 @@ public class JdbcProductRepository implements ProductRepository {
 
         // 이미지 파일들 (',') 구분자로 구분해서 연결
         String imageFileNames = connectImageFiles(product);
-        System.out.println(imageFileNames);
         try {
             conn = getConnection();
             pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -45,13 +44,37 @@ public class JdbcProductRepository implements ProductRepository {
             pstmt.setString(4, String.valueOf(imageFileNames));
             pstmt.setString(5, String.valueOf(String.valueOf(product.getCreateDate())));
             pstmt.executeUpdate();
-            rs = pstmt.getGeneratedKeys();
-            if (rs.next()) {
-                product.setId(rs.getLong(1));
-                generatedId = rs.getLong(1);
-            } else {
-                throw new SQLException("id 조회 실패");
-            }
+
+            return product;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
+
+
+    @Override
+    public Product update(Product product) {
+        String sql = "update Product SET name = ?, price = ?, category = ? where id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        // 이미지 파일들 (',') 구분자로 구분해서 연결
+        //String imageFileNames = connectImageFiles(product);
+
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, product.getName());
+            pstmt.setInt(2, product.getPrice());
+            pstmt.setString(3, product.getCategory());
+            pstmt.setLong(4, product.getId());
+            //pstmt.setString(4, String.valueOf(imageFileNames));
+
+            pstmt.executeUpdate();
             return product;
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -79,6 +102,7 @@ public class JdbcProductRepository implements ProductRepository {
                 product.setCategory(rs.getString("category"));
                 product.setStringImageFiles(rs.getString("images"));
                 product.setCreateDate(rs.getString("createDate"));
+                System.out.println(product.getCreateDate());
                 return Optional.of(product);
             } else {
                 return Optional.empty();

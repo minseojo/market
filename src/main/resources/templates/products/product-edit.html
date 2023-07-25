@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 기존 스크립트는 제외하고 아래 내용으로 대체 -->
+  <script th:inline="javascript">
+    let imageIndex = 0;
+    let images = /*[[${imageFileNames}]]*/ [];
+    function showNextImage() {
+      let imgElement = document.getElementById('image');
+      imageIndex = (imageIndex + 1) % images.length;
+      let nextImage = images[imageIndex];
+      imgElement.src = "/images/" + nextImage;
+    }
+
+    function showPrevImage() {
+      let imgElement = document.getElementById('image');
+      if (imageIndex - 1 >= 0) {
+        imageIndex -= 1;
+      } else {
+        imageIndex = images.length - 1;
+      }
+      let prevImage = images[imageIndex];
+      imgElement.src = "/images/" + prevImage;
+    }
+  </script>
+
+</head>
+<main>
+  <body>
+  <div class="container">
+  <h1>상품 수정</h1>
+
+    <form th:action="|/products/edit/${product.get().id}|"  th:object="${product}" method="post">
+      <hidden th:value="${product.get().id}"></hidden>
+      <label for="name">상품 이름:</label>
+      <input type="text" id="name" name="name" th:value="${product.get().name}" required><br><br>
+
+      <label for="price">상품 가격:</label>
+      <input type="number" id="price" name="price" th:value="${product.get().price}" required><br><br>
+
+      <label for="category">상품 종류:</label>
+      <input type="number" id="category" name="category" th:value="${product.get().category}" required><br><br>
+
+      <button type="submit"> 수정 하기</button>
+    </form>
+  <p class="createDate" th:text="|상품등록일: ${product.get().createDate}|"></p>
+
+  <button onclick="showPrevImage()">이전</button>
+  <button onclick="showNextImage()">다음</button>
+  <img id="image" th:src="|/images/${imageFileNames[0]}|" th:width="300" th:height="300">
+
+  </div>
+  </body>
+</main>
+</html>
+

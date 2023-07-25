@@ -1,4 +1,4 @@
-package demo.demo.controller;
+package demo.demo.Form;
 
 import lombok.Getter;
 import lombok.Setter;
