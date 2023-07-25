@@ -109,7 +109,7 @@ public class ProductController {
         Optional<Product> product = productService.findById(id);
         model.addAttribute("product", product);
 
-        if (product.isPresent() && product.get().getStringImageFiles() != "") {
+        if (product.isPresent() && product.get().getStringImageFiles() != null) {
             List<String> imageFileNames = List.of(product.get().getStringImageFiles().split(","));
             model.addAttribute("imageFileNames", imageFileNames);
         }
