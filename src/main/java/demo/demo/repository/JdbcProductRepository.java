@@ -5,6 +5,7 @@ import demo.demo.domain.UploadFile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -16,17 +17,35 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JdbcProductRepository implements ProductRepository {
     private final DataSource dataSource;
-    long generatedId = 0;
 
+    // 빌더로 상품 생성해서 리턴 (중복 코드 매소드)
+    private Product product(ResultSet rs) throws SQLException {
+        Long id = rs.getLong("id");
+        String name = rs.getString("name");
+        Integer price = rs.getInt("price");
+        String category = rs.getString("category");
+        String images = rs.getString("images");
+        String createDate = rs.getString("createDate");
 
+        return Product.builder()
+                .id(id)
+                .name(name)
+                .price(price)
+                .category(category)
+                .stringImageFiles(images)
+                .createDate(createDate)
+                .build();
+    }
     private String connectImageFiles(Product product) {
         StringBuilder imagesFileNames = new StringBuilder();
-        for (UploadFile imageFile : product.getImageFiles()) {
-            imagesFileNames.append(imageFile.getStoreFileName() + ",");
+        if (product.getImageFiles() != null) {
+            for (UploadFile imageFile : product.getImageFiles()) {
+                imagesFileNames.append(imageFile.getStoreFileName()).append(",");
+            }
         }
         return String.valueOf(imagesFileNames);
     }
-    @Override
+
     public Product sava(Product product) {
         String sql = "insert into Product(name, price, category, images, createDate) values(?,?,?,?,?)";
         Connection conn = null;
@@ -45,6 +64,11 @@ public class JdbcProductRepository implements ProductRepository {
             pstmt.setString(5, String.valueOf(String.valueOf(product.getCreateDate())));
             pstmt.executeUpdate();
 
+            rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                long generatedId = rs.getLong(1);
+                product.setId(generatedId); // 프라이머리 키(id) 값을 Product 객체에 설정
+            }
             return product;
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -52,10 +76,6 @@ public class JdbcProductRepository implements ProductRepository {
             close(conn, pstmt, rs);
         }
     }
-
-
-
-    @Override
     public Product update(Product product) {
         String sql = "update Product SET name = ?, price = ?, category = ? where id = ?";
         Connection conn = null;
@@ -83,7 +103,7 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
 
-    @Override
+    @Transactional
     public Optional<Product> findById(Long id) {
         String sql = "select * from Product where id = ?";
         Connection conn = null;
@@ -95,14 +115,7 @@ public class JdbcProductRepository implements ProductRepository {
             pstmt.setLong(1, id);
             rs = pstmt.executeQuery();
             if(rs.next()) {
-                Product product = new Product();
-                product.setId(rs.getLong("id"));
-                product.setName(rs.getString("name"));
-                product.setPrice(rs.getInt("price"));
-                product.setCategory(rs.getString("category"));
-                product.setStringImageFiles(rs.getString("images"));
-                product.setCreateDate(rs.getString("createDate"));
-                System.out.println(product.getCreateDate());
+                Product product = product(rs);
                 return Optional.of(product);
             } else {
                 return Optional.empty();
@@ -119,7 +132,6 @@ public class JdbcProductRepository implements ProductRepository {
         return Optional.empty();
     }
 
-
     public List<Product> findLimitTwenty() {
         String sql = "select * from Product"
                 + " order by id desc"
@@ -133,13 +145,7 @@ public class JdbcProductRepository implements ProductRepository {
             rs = pstmt.executeQuery();
             List<Product> products = new ArrayList<>();
             while(rs.next()) {
-                Product product = new Product();
-                product.setId(rs.getLong("id"));
-                product.setName(rs.getString("name"));
-                product.setPrice(rs.getInt("price"));
-                product.setCategory(rs.getString("category"));
-                product.setStringImageFiles(rs.getString("images"));
-                product.setCreateDate(rs.getString("createDate"));
+                Product product = product(rs);
                 products.add(product);
             }
             return products;
@@ -161,11 +167,7 @@ public class JdbcProductRepository implements ProductRepository {
             rs = pstmt.executeQuery();
             List<Product> products = new ArrayList<>();
             while(rs.next()) {
-                Product product = new Product();
-                product.setId(rs.getLong("id"));
-                product.setName(rs.getString("name"));
-                product.setPrice(rs.getInt("price"));
-                product.setCategory(rs.getString("category"));
+                Product product = product(rs);
                 products.add(product);
             }
             return products;
@@ -175,7 +177,8 @@ public class JdbcProductRepository implements ProductRepository {
             close(conn, pstmt, rs);
         }
     }
-    @Override
+
+    @Transactional
     public List<Product> findByFilter(String name) {
         String sql = "select * from Product where name like ?";
         Connection conn = null;
@@ -188,13 +191,7 @@ public class JdbcProductRepository implements ProductRepository {
             rs = pstmt.executeQuery();
             List<Product> products = new ArrayList<>();
             while(rs.next()) {
-                Product product = new Product();
-                product.setId(rs.getLong("id"));
-                product.setName(rs.getString("name"));
-                product.setPrice(rs.getInt("price"));
-                product.setCategory(rs.getString("category"));
-                product.setStringImageFiles(rs.getNString("images"));
-                product.setCreateDate(rs.getString("createDate"));
+                Product product = product(rs);
                 products.add(product);
             }
             return products;
@@ -205,7 +202,6 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
 
-    @Override
     public Optional<Product> findByCategory(String category) {
         String sql = "select * from Product where category = ?";
         Connection conn = null;
@@ -217,12 +213,7 @@ public class JdbcProductRepository implements ProductRepository {
             pstmt.setString(1, category);
             rs = pstmt.executeQuery();
             if(rs.next()) {
-                Product product = new Product();
-                product.setId(rs.getLong("id"));
-                product.setName(rs.getString("name"));
-                product.setPrice(rs.getInt("price"));
-                product.setCategory(rs.getString("category"));
-                product.setCreateDate(rs.getString("createDate"));
+                Product product = product(rs);
                 return Optional.of(product);
             }
             return Optional.empty();
@@ -233,7 +224,6 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
 
-    @Override
     public List<Product> findAll() {
         String sql = "select * from Product";
         Connection conn = null;
@@ -245,13 +235,7 @@ public class JdbcProductRepository implements ProductRepository {
             rs = pstmt.executeQuery();
             List<Product> products = new ArrayList<>();
             while(rs.next()) {
-                Product product = new Product();
-                product.setId(rs.getLong("id"));
-                product.setName(rs.getString("name"));
-                product.setPrice(rs.getInt("price"));
-                product.setCategory(rs.getString("category"));
-                product.setStringImageFiles(rs.getString("images"));
-                product.setCreateDate(rs.getString("createDate"));
+                Product product = product(rs);
                 products.add(product);
             }
             return products;

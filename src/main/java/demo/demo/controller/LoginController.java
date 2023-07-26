@@ -47,16 +47,16 @@ public class LoginController {
 
     @PostMapping("/signup")
     public String signup(@Valid @ModelAttribute SignupForm form, BindingResult result, RedirectAttributes redirectAttributes) throws IOException {
-        User user = new User();
-        user.setNickname(form.getNickname());
-        user.setUserId(form.getUserId());
-        user.setPassword(form.getPassword());
-        user.setName(form.getName());
-        user.setEmail(form.getEmail());
-        user.setAddress(form.getAddress());
-        user.setPhoneNumber(form.getPhoneNumber());
-        user.setRegistrationDate(time.getTime());
-
+        User user = User.builder()
+                .userId(form.getUserId())
+                .password(form.getPassword())
+                .nickname(form.getNickname())
+                .name(form.getName())
+                .email(form.getEmail())
+                .address(form.getAddress())
+                .phoneNumber(form.getPhoneNumber())
+                .registrationDate(time.getTime())
+                .build();
         userService.create(user);
 
         redirectAttributes.addAttribute("id", user.getId());

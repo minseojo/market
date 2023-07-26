@@ -5,7 +5,6 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -16,7 +15,6 @@ public class SignupForm {
     private String userId; // Id
     @NotBlank
     private String password; // 비밀번호
-
     @NotBlank
     private String name; // 이름
     @Email

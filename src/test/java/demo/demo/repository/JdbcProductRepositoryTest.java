@@ -23,7 +23,7 @@ class JdbcProductRepositoryTest {
     @Autowired
     JdbcProductRepositoryTest(DataSource dataSource) {
         this.dataSource = dataSource;
-        this.productRepository = new JdbcProductRepository(dataSource);
+        this.productRepository = (ProductRepository) new JdbcProductRepository(dataSource);
     }
 
     @BeforeEach
@@ -34,10 +34,11 @@ class JdbcProductRepositoryTest {
 
     @Test
     void sava() {
-        Product product = new Product();
-        product.setName("물");
-        product.setPrice(1000);
-        product.setCategory("음식");
+        Product product = Product.builder()
+                .name("물")
+                .price(1000)
+                .category("음식")
+                .build();
         Product product3 = productRepository.sava(product);
 
 

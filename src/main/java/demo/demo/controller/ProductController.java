@@ -1,9 +1,10 @@
 package demo.demo.controller;
 
-import demo.demo.Form.ProductEditForm;
-import demo.demo.Form.ProductForm;
+import demo.demo.Form.ProductUpdateForm;
+import demo.demo.Form.ProductSaveForm;
 import demo.demo.domain.Product;
 import demo.demo.domain.UploadFile;
+import demo.demo.repository.ProductRepository;
 import demo.demo.service.FileService;
 import demo.demo.service.ProductService;
 import demo.demo.utility.Time;
@@ -16,7 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
@@ -28,13 +28,13 @@ import java.util.Optional;
 public class ProductController {
 
     private final ProductService productService;
-
     private final FileService fileService;
+    private final ProductRepository productRepository;
 
     private final Time time;
 
     @GetMapping("/products")
-    public String getAllList(Model model) {
+    public String products(Model model) {
         List<Product> products = productService.findAllProduct();
         model.addAttribute("products", products);
         return "products/productsList";
@@ -46,24 +46,24 @@ public class ProductController {
     }
 
     @PostMapping("/products/new")
-    public String create(@Valid @ModelAttribute ProductForm form, BindingResult result, RedirectAttributes redirectAttributes) throws IOException {
+    public String create(@Valid @ModelAttribute ProductSaveForm form, BindingResult result, RedirectAttributes redirectAttributes) throws Exception {
         if (result.hasErrors()) {
+            log.info("BindingResult = {}", result);
             return "products/createProductForm";
         }
 
-        Product product = new Product();
-        product.setName(form.getName());
-        product.setPrice(form.getPrice());
-        product.setCategory(form.getCategory());
-
-        List<UploadFile> storeImageFiles = fileService.storeFiles(form.getImageFiles());
-        product.setImageFiles(storeImageFiles);
         String createTime = time.getTime();
-        product.setCreateDate(createTime);
-        productService.create(product);
+        List<UploadFile> storeImageFiles = fileService.saveFiles(form.getImageFiles());
 
-        redirectAttributes.addAttribute("productId", product.getId());
-       // return "redirect:/";
+        Product product = Product.builder()
+                .name(form.getName())
+                .price(form.getPrice())
+                .category(form.getCategory())
+                .createDate(createTime)
+                .imageFiles(storeImageFiles)
+                .build();
+        Long productId = productService.create(product);
+        redirectAttributes.addAttribute("productId", productId);
         return "redirect:/products/{productId}";
     }
 
@@ -72,31 +72,33 @@ public class ProductController {
         Optional<Product> product = productService.findById(id);
         model.addAttribute("product", product);
 
-        if (product.isPresent() && product.get().getStringImageFiles() != "") {
-            List<String> imageFileNames = List.of(product.get().getStringImageFiles().split(","));
-            model.addAttribute("imageFileNames", imageFileNames);
+        if (product.isPresent()) {
+            if (!product.get().getStringImageFiles().isEmpty()) {
+                List<String> imageFileNames = List.of(product.get().getStringImageFiles().split(","));
+                model.addAttribute("imageFileNames", imageFileNames);
+            } else {
+                List<String> defaultImage = List.of("default_product.jpeg");
+                model.addAttribute("imageFileNames", defaultImage);
+            }
         }
 
         return "products/product-edit";
     }
 
     @PostMapping("/products/edit/{id}")
-    public String update(@PathVariable Long id, @Valid @ModelAttribute("product") ProductEditForm form, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String update(@PathVariable Long id, @Valid @ModelAttribute("product") ProductUpdateForm form, BindingResult result, RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
-            //return "redirect:/products/edit";
+            log.info("BindingResult = {}", result);
         }
-        log.info("{} {}", form.getId(), form.getName());
-        Product updateProduct = new Product();
-        updateProduct.setId(form.getId());
-        updateProduct.setName(form.getName());
-        updateProduct.setPrice(form.getPrice());
-        updateProduct.setCategory(form.getCategory());
 
-        /*
-        List<UploadFile> storeImageFiles = fileService.storeFiles(form.getImageFiles());
-        productForm.setImageFiles(storeImageFiles);
-        */
+        // 나중에 이미지 변경도 추가할 예정
+        Product updateProduct = Product.builder()
+                .id(form.getId())
+                .name(form.getName())
+                .price(form.getPrice())
+                .category(form.getCategory())
+                .build();
         productService.update(updateProduct);
 
         redirectAttributes.addAttribute("productId", updateProduct.getId());
@@ -109,9 +111,14 @@ public class ProductController {
         Optional<Product> product = productService.findById(id);
         model.addAttribute("product", product);
 
-        if (product.isPresent() && product.get().getStringImageFiles() != null) {
-            List<String> imageFileNames = List.of(product.get().getStringImageFiles().split(","));
-            model.addAttribute("imageFileNames", imageFileNames);
+        if (product.isPresent()) {
+            if (!product.get().getStringImageFiles().isEmpty()) {
+                List<String> imageFileNames = List.of(product.get().getStringImageFiles().split(","));
+                model.addAttribute("imageFileNames", imageFileNames);
+            } else {
+                List<String> defaultImage = List.of("default_product.jpeg");
+                model.addAttribute("imageFileNames", defaultImage);
+            }
         }
         return "products/product-view";
     }

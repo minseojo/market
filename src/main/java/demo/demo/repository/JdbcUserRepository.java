@@ -1,6 +1,5 @@
 package demo.demo.repository;
 
-import demo.demo.domain.Product;
 import demo.demo.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -15,6 +14,30 @@ import java.util.Optional;
 public class JdbcUserRepository {
 
     private final DataSource dataSource;
+
+    private User user(ResultSet rs) throws SQLException {
+        Long id = rs.getLong("id");
+        String userId = rs.getString("userId");
+        String password = rs.getString("password");
+        String nickname = rs.getString("nickname");
+        String name = rs.getString("name");
+        String email = rs.getString("email");
+        String address = rs.getNString("address");
+        String phoneNumber = rs.getString("phoneNumber");
+        String registrationDate = rs.getString("registrationDate");
+        return User.builder()
+                .id(id)
+                .userId(userId)
+                .password(password)
+                .nickname(nickname)
+                .name(name)
+                .email(email)
+                .address(address)
+                .phoneNumber(phoneNumber)
+                .registrationDate(registrationDate)
+                .build();
+    }
+
     public User sava(User user) {
         String sql = "insert into User(nickname, userId, password, name, email, phoneNumber, address, registrationDate) values(?,?,?,?,?,?,?,?)";
         Connection conn = null;
@@ -58,16 +81,7 @@ public class JdbcUserRepository {
             pstmt.setLong(1, id);
             rs = pstmt.executeQuery();
             if(rs.next()) {
-                User user = new User();
-                user.setId(rs.getLong("id"));
-                user.setNickname(rs.getString("nickname"));
-                user.setName(rs.getString("name"));
-                user.setUserId(rs.getString("userId"));
-                user.setPassword(rs.getString("password"));
-                user.setEmail(rs.getString("email"));
-                user.setAddress(rs.getString("address"));
-                user.setPhoneNumber(rs.getString("phoneNumber"));
-                user.setRegistrationDate(rs.getString("registrationDate"));
+                User user = user(rs);
                 return Optional.of(user);
             } else {
                 return Optional.empty();
@@ -89,16 +103,7 @@ public class JdbcUserRepository {
             pstmt.setString(1, userId);
             rs = pstmt.executeQuery();
             if(rs.next()) {
-                User user = new User();
-                user.setId(rs.getLong("id"));
-                user.setNickname(rs.getString("nickname"));
-                user.setName(rs.getString("name"));
-                user.setUserId(rs.getString("userId"));
-                user.setPassword(rs.getString("password"));
-                user.setEmail(rs.getString("email"));
-                user.setAddress(rs.getString("address"));
-                user.setPhoneNumber(rs.getString("phoneNumber"));
-                user.setRegistrationDate(rs.getString("registrationDate"));
+                User user = user(rs);
                 return Optional.of(user);
             } else {
                 return Optional.empty();

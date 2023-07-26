@@ -1,13 +1,11 @@
 package demo.demo.repository;
 
 import demo.demo.domain.Product;
-
 import java.util.List;
 import java.util.Optional;
 
 
 public interface ProductRepository {
-
     // 상품 저장
     Product sava(Product product);
 

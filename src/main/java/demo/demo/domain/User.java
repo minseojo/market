@@ -1,14 +1,20 @@
 package demo.demo.domain;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
+@Setter
+@Builder
 public class User {
 
+    @NotNull
     private Long id; // 기본키, 디비에 저장 될 유저 고유 id
 
     @NotBlank
@@ -20,6 +26,9 @@ public class User {
 
     @NotBlank
     private String name; // 이름
+
+    @NotBlank
+    private String sex; // 성별
 
     @Email
     private String email; // 이메일

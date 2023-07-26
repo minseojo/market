@@ -11,7 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ProductForm {
+public class ProductSaveForm {
     @NotBlank
     private String name;
 
