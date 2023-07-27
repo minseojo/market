@@ -2,8 +2,8 @@ package demo.demo.domain;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.context.annotation.Primary;
 import org.springframework.lang.Nullable;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+
 public class Product{
 
     @Builder.Default
@@ -37,6 +38,5 @@ public class Product{
     //yyyy-MM-dd HH:mm:ss (mysql DateTime)
     @NotNull
     private String createDate;
-
 
 }

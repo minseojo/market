@@ -33,20 +33,22 @@
   <div class="container">
   <h1>상품 수정</h1>
 
-    <form th:action="|/products/edit/${product.get().id}|"  th:object="${product}" method="post">
-      <hidden th:value="${product.get().id}"></hidden>
+    <form th:action="|/products/edit/${product.id}|"  th:object="${product}" method="post">
+
       <label for="name">상품 이름:</label>
-      <input type="text" id="name" name="name" th:value="${product.get().name}" required><br><br>
+      <input type="text" id="name" name="name" th:value="${product.name}">
+      <br><br>
 
       <label for="price">상품 가격:</label>
-      <input type="number" id="price" name="price" th:value="${product.get().price}" required><br><br>
+      <input type="text" id="price" name="price" th:value="${product.price}">
+      <br><br>
 
       <label for="category">상품 종류:</label>
-      <input type="text" id="category" name="category" th:value="${product.get().category}" required><br><br>
+      <input type="text" id="category" name="category" th:value="${product.category}"><br><br>
 
       <button type="submit"> 수정 하기</button>
     </form>
-  <p class="createDate" th:text="|상품등록일: ${product.get().createDate}|"></p>
+  <p class="createDate" th:field="${product}" th:text="|상품등록일: ${product.createDate}|"></p>
 
   <button onclick="showPrevImage()">이전</button>
   <button onclick="showNextImage()">다음</button>

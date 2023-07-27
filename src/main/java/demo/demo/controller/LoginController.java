@@ -3,40 +3,46 @@ package demo.demo.controller;
 import demo.demo.Form.LoginForm;
 import demo.demo.Form.SignupForm;
 import demo.demo.domain.User;
+import demo.demo.service.LoginService;
 import demo.demo.service.UserService;
-import demo.demo.utility.Time;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import javax.validation.Valid;
-import java.io.IOException;
-import java.util.Optional;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class LoginController {
     private final UserService userService;
-    private final Time time;
+    private final LoginService loginService;
     @GetMapping("/login")
     public String loginHome() {
         return "login/login-view";
     }
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute LoginForm form, BindingResult result, RedirectAttributes redirectAttributes) throws IOException {
-        String userId = form.getUserId();
-        Optional<User> user = userService.findByUserId(userId);
-        if(user.isPresent()) {
-            if(form.getPassword().equals(user.get().getPassword())) {
-                redirectAttributes.addAttribute("id", user.get().getId());
-                return "redirect:/users/{id}";
-            }
+    public String login(@Valid @ModelAttribute LoginForm form, BindingResult result, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            log.info("{}", result);
         }
+
+        User user = userService.findByUserId(form.getUserId()).orElse(null);
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        if (loginService.login(user, form)) {
+            redirectAttributes.addAttribute("id", user.getId());
+            return "redirect:/users/{id}";
+        }
+
         return "redirect:/login";
     }
 
@@ -46,20 +52,14 @@ public class LoginController {
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid @ModelAttribute SignupForm form, BindingResult result, RedirectAttributes redirectAttributes) throws IOException {
-        User user = User.builder()
-                .userId(form.getUserId())
-                .password(form.getPassword())
-                .nickname(form.getNickname())
-                .name(form.getName())
-                .email(form.getEmail())
-                .address(form.getAddress())
-                .phoneNumber(form.getPhoneNumber())
-                .registrationDate(time.getTime())
-                .build();
-        userService.create(user);
+    public String signup(@Valid @ModelAttribute SignupForm form, BindingResult result, RedirectAttributes redirectAttributes)  {
+        if (result.hasErrors()) {
+            log.info("{}", result);
+        }
 
-        redirectAttributes.addAttribute("id", user.getId());
+        Long id = loginService.signup(form);
+
+        redirectAttributes.addAttribute("id", id);
         return "redirect:/users/{id}";
     }
 

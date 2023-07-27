@@ -1,12 +1,13 @@
 package demo.demo.controller;
 
+import demo.demo.Form.ProductCreateForm;
 import demo.demo.Form.ProductUpdateForm;
-import demo.demo.Form.ProductSaveForm;
 import demo.demo.domain.Product;
 import demo.demo.domain.UploadFile;
-import demo.demo.repository.ProductRepository;
 import demo.demo.service.FileService;
+import demo.demo.service.ProductCreateService;
 import demo.demo.service.ProductService;
+import demo.demo.service.ProductUpdateService;
 import demo.demo.utility.Time;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,18 +19,20 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.net.MalformedURLException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
+import static demo.demo.defaultName.PRODUCT_IMAGE;
+
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-
 public class ProductController {
 
     private final ProductService productService;
     private final FileService fileService;
-    private final ProductRepository productRepository;
+    private final ProductCreateService productCreateService;
+    private final ProductUpdateService productUpdateService;
 
     private final Time time;
 
@@ -46,80 +49,55 @@ public class ProductController {
     }
 
     @PostMapping("/products/new")
-    public String create(@Valid @ModelAttribute ProductSaveForm form, BindingResult result, RedirectAttributes redirectAttributes) throws Exception {
+    public String create(@Valid @ModelAttribute ProductCreateForm form, BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             log.info("BindingResult = {}", result);
             return "products/createProductForm";
         }
 
-        String createTime = time.getTime();
-        List<UploadFile> storeImageFiles = fileService.saveFiles(form.getImageFiles());
+        Product product = productCreateService.createProduct(form);
 
-        Product product = Product.builder()
-                .name(form.getName())
-                .price(form.getPrice())
-                .category(form.getCategory())
-                .createDate(createTime)
-                .imageFiles(storeImageFiles)
-                .build();
-        Long productId = productService.create(product);
-        redirectAttributes.addAttribute("productId", productId);
+        redirectAttributes.addAttribute("productId", product.getId());
         return "redirect:/products/{productId}";
     }
 
     @GetMapping("/products/edit/{id}")
     public String getEditView(@PathVariable Long id, Model model) {
-        Optional<Product> product = productService.findById(id);
-        model.addAttribute("product", product);
+        Product product = productService.findById(id).orElseThrow(NoSuchElementException::new);
 
-        if (product.isPresent()) {
-            if (!product.get().getStringImageFiles().isEmpty()) {
-                List<String> imageFileNames = List.of(product.get().getStringImageFiles().split(","));
-                model.addAttribute("imageFileNames", imageFileNames);
-            } else {
-                List<String> defaultImage = List.of("default_product.jpeg");
-                model.addAttribute("imageFileNames", defaultImage);
-            }
-        }
+        ProductUpdateForm productUpdateForm = productUpdateService.createProduct(product);
+        model.addAttribute("product", productUpdateForm);
+
+        List<String> imageFileNames = productUpdateService.getImageFileNames(product);
+        model.addAttribute("imageFileNames", imageFileNames);
 
         return "products/product-edit";
     }
 
-    @PostMapping("/products/edit/{id}")
-    public String update(@PathVariable Long id, @Valid @ModelAttribute("product") ProductUpdateForm form, BindingResult result, RedirectAttributes redirectAttributes) {
 
+    @PostMapping("/products/edit/{id}")
+    public String update(@Valid @ModelAttribute("product") ProductUpdateForm form, BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             log.info("BindingResult = {}", result);
         }
 
-        // 나중에 이미지 변경도 추가할 예정
-        Product updateProduct = Product.builder()
-                .id(form.getId())
-                .name(form.getName())
-                .price(form.getPrice())
-                .category(form.getCategory())
-                .build();
-        productService.update(updateProduct);
+        productUpdateService.update(form);
 
-        redirectAttributes.addAttribute("productId", updateProduct.getId());
+        redirectAttributes.addAttribute("productId", form.getId());
         return "redirect:/products/{productId}";
     }
 
-
     @GetMapping("/products/{id}")
-    public String product(@PathVariable Long id, Model model){
-        Optional<Product> product = productService.findById(id);
+    public String product(@PathVariable Long id, Model model) {
+        Product product = productService.findById(id).orElse(null);
+        if (product == null) {
+            return "errors/product-null";
+        }
         model.addAttribute("product", product);
 
-        if (product.isPresent()) {
-            if (!product.get().getStringImageFiles().isEmpty()) {
-                List<String> imageFileNames = List.of(product.get().getStringImageFiles().split(","));
-                model.addAttribute("imageFileNames", imageFileNames);
-            } else {
-                List<String> defaultImage = List.of("default_product.jpeg");
-                model.addAttribute("imageFileNames", defaultImage);
-            }
-        }
+        List<String> imageFileNames = productService.getImageFileNames(product);
+        model.addAttribute("imageFileNames", imageFileNames);
+
         return "products/product-view";
     }
 

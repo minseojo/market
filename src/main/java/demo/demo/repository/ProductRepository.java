@@ -30,5 +30,5 @@ public interface ProductRepository {
     List<Product> findByFilter(String name);
 
     // 선택한 카테로기 상품 보기
-    Optional<Product> findByCategory(String category);
+    List<Product> findByCategory(String category);
 }

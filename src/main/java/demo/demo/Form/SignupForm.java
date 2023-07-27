@@ -1,5 +1,6 @@
 package demo.demo.Form;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +9,9 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
+@Builder
 public class SignupForm {
+    private Long id;
     @NotBlank
     private String nickname;  // 사용자가 이용할 닉네임
     @NotBlank

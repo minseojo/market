@@ -1,5 +1,6 @@
 package demo.demo.Form;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 public class ProductUpdateForm {
     @NotNull
     private Long id;
@@ -27,5 +29,7 @@ public class ProductUpdateForm {
     private String category;
 
     private List<MultipartFile> imageFiles;
+
+    private String createDate;
 
 }

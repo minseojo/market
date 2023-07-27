@@ -1,6 +1,5 @@
 package demo.demo.controller;
 
-import demo.demo.domain.Product;
 import demo.demo.domain.User;
 import demo.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller

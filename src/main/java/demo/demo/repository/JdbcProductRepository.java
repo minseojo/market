@@ -178,7 +178,7 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
 
-    @Transactional
+    @Override
     public List<Product> findByFilter(String name) {
         String sql = "select * from Product where name like ?";
         Connection conn = null;
@@ -202,7 +202,7 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
 
-    public Optional<Product> findByCategory(String category) {
+    public List<Product> findByCategory(String category) {
         String sql = "select * from Product where category = ?";
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -212,11 +212,15 @@ public class JdbcProductRepository implements ProductRepository {
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, category);
             rs = pstmt.executeQuery();
-            if(rs.next()) {
+            List<Product> products = new ArrayList<>();
+            while (rs.next()) {
                 Product product = product(rs);
-                return Optional.of(product);
+                products.add(product);
             }
-            return Optional.empty();
+            if (products.isEmpty()) {
+                return null;
+            }
+            return products;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         } finally {
