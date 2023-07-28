@@ -14,6 +14,26 @@
     text-decoration: none;
     color: black;
   }
+
+  .logout-button {
+    background-color: white;
+    color: black;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    width: 4.9rem;
+    margin-left: 0.6rem;
+    height: 2.3rem;
+    border: 1px solid black;
+    border-radius: 3px;
+    display: flex;
+  }
+
+  /* 버튼에 마우스를 올렸을 때 스타일 변경 */
+  .logout-button:hover {
+    background-color: lightgray;
+
+  }
 </style>
 
 <body>
@@ -24,13 +44,18 @@
 
       <a class="a" href="/products/new">상품 등록</a>
       <a class="a" href="/products">상품 목록</a>
+
       <form action="/search" method="get">
         <div class="form-group">
           <input class="search" name="name" id="input" type="text" placeholder="물품을 검색해보세요.">
         </div>
         <button type="submit" hidden="hidden"></button>
       </form>
-      <a class="a" href="/login"> 채팅하기</a>
+
+      <form id="logoutForm" action="/logout" method="post">
+        <button type="submit" class="logout-button" >로그아웃</button>
+      </form>
+
     </ul>
   </nav>
 </header>

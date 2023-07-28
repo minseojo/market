@@ -25,4 +25,6 @@ public class ProductCreateForm {
 
     private List<MultipartFile> imageFiles;
 
+    private Long ownerId;
+
 }

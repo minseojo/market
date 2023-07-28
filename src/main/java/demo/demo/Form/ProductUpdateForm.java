@@ -14,7 +14,6 @@ import java.util.List;
 @Setter
 @Builder
 public class ProductUpdateForm {
-    @NotNull
     private Long id;
 
     @NotBlank
@@ -31,5 +30,7 @@ public class ProductUpdateForm {
     private List<MultipartFile> imageFiles;
 
     private String createDate;
+
+    private Long ownerId;
 
 }

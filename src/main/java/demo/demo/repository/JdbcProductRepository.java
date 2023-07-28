@@ -26,7 +26,7 @@ public class JdbcProductRepository implements ProductRepository {
         String category = rs.getString("category");
         String images = rs.getString("images");
         String createDate = rs.getString("createDate");
-
+        Long owner_id = rs.getLong("owner_id");
         return Product.builder()
                 .id(id)
                 .name(name)
@@ -34,6 +34,7 @@ public class JdbcProductRepository implements ProductRepository {
                 .category(category)
                 .stringImageFiles(images)
                 .createDate(createDate)
+                .ownerId(owner_id)
                 .build();
     }
     private String connectImageFiles(Product product) {
@@ -47,7 +48,7 @@ public class JdbcProductRepository implements ProductRepository {
     }
 
     public Product sava(Product product) {
-        String sql = "insert into Product(name, price, category, images, createDate) values(?,?,?,?,?)";
+        String sql = "insert into Product(name, price, category, images, createDate, owner_id) values(?,?,?,?,?,?)";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -55,6 +56,7 @@ public class JdbcProductRepository implements ProductRepository {
         // 이미지 파일들 (',') 구분자로 구분해서 연결
         String imageFileNames = connectImageFiles(product);
         try {
+            System.out.println("ower" + product.getOwnerId());
             conn = getConnection();
             pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, product.getName());
@@ -62,6 +64,7 @@ public class JdbcProductRepository implements ProductRepository {
             pstmt.setString(3, product.getCategory());
             pstmt.setString(4, String.valueOf(imageFileNames));
             pstmt.setString(5, String.valueOf(String.valueOf(product.getCreateDate())));
+            pstmt.setLong(6, product.getOwnerId());
             pstmt.executeUpdate();
 
             rs = pstmt.getGeneratedKeys();

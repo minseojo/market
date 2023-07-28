@@ -26,8 +26,16 @@
             imgElement.src = "/images/" + prevImage;
         }
     </script>
-
 </head>
+
+<header>
+    <nav>
+        <ul>
+            <a class="market" href="/">개발 마켓</a>
+        </ul>
+    </nav>
+</header>
+
 <main>
 <body>
     <div class="container">
@@ -41,7 +49,7 @@
         <button onclick="showNextImage()">다음</button>
         <img id="image" th:src="|/images/${imageFileNames[0]}|" th:width="300" th:height="300">
 
-     <button th:onclick="|location.href='/products/edit/${product.id}'|">상품 수정</button>
+     <button th:if="${loginUserId == product.ownerId}" th:onclick="|location.href='/products/edit/${product.id}'|">상품 수정</button>
     </div>
 
 </body>

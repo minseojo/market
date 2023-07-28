@@ -2,6 +2,7 @@ package demo.demo.service;
 
 import demo.demo.Form.ProductCreateForm;
 import demo.demo.Form.ProductUpdateForm;
+import demo.demo.SessionConst;
 import demo.demo.domain.Product;
 import demo.demo.domain.UploadFile;
 import demo.demo.repository.ProductRepository;
@@ -24,23 +25,19 @@ public class ProductService {
     private final FileService fileService;
     private final Time time;
 
-    public Long create(Product product) {
-        productRepository.sava(product);
-        return product.getId();
-    }
-
-    public Product createProduct(ProductCreateForm form) {
+    public Product create(ProductCreateForm form, Long loginUserId) {
         List<UploadFile> storeImageFiles = fileService.saveFiles(form.getImageFiles());
         if (storeImageFiles.isEmpty()) {
             storeImageFiles.add(new UploadFile(PRODUCT_IMAGE));
         }
-
+        System.out.println("lg"+loginUserId);
         Product product = Product.builder()
                 .name(form.getName())
                 .price(form.getPrice())
                 .category(form.getCategory())
                 .createDate(time.getTime())
                 .imageFiles(storeImageFiles)
+                .ownerId(loginUserId)
                 .build();
 
         productRepository.sava(product);
@@ -63,18 +60,27 @@ public class ProductService {
                 .name(form.getName())
                 .price(form.getPrice())
                 .category(form.getCategory())
+                .ownerId(form.getOwnerId())
                 .build();
 
         return productRepository.update(product);
     }
 
-    public ProductUpdateForm createProduct(Product product) {
+    public boolean ownerCheck(Long loginUserId, Long ownerId) {
+        if (loginUserId != ownerId) {
+            return false;
+        }
+        return true;
+    }
+
+    public ProductUpdateForm updateProductCreate(Product product) {
         return ProductUpdateForm.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .price(product.getPrice())
                 .category(product.getCategory())
                 .createDate(product.getCreateDate())
+                .ownerId(product.getOwnerId())
                 .build();
     }
 

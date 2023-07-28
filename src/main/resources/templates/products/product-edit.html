@@ -28,8 +28,19 @@
   </script>
 
 </head>
+
+<header>
+  <nav>
+    <ul>
+      <a class="market" href="/">개발 마켓</a>
+    </ul>
+  </nav>
+</header>
+
 <main>
-  <body>
+</main>
+
+<body>
   <div class="container">
   <h1>상품 수정</h1>
 
@@ -45,7 +56,7 @@
 
       <label for="category">상품 종류:</label>
       <input type="text" id="category" name="category" th:value="${product.category}"><br><br>
-
+      <!-- 올바른 표현식을 사용하여 수정하기 버튼 렌더링 -->
       <button type="submit"> 수정 하기</button>
     </form>
   <p class="createDate" th:field="${product}" th:text="|상품등록일: ${product.createDate}|"></p>
@@ -55,7 +66,6 @@
   <img id="image" th:src="|/images/${imageFileNames[0]}|" th:width="300" th:height="300">
 
   </div>
-  </body>
-</main>
+</body>
 </html>
 

@@ -39,4 +39,7 @@ public class Product{
     @NotNull
     private String createDate;
 
+    @NotNull
+    private Long ownerId;
+
 }
