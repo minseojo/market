@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="index.css?after" />
+  <title>home</title>
+</head>
+
+<style>
+  a.product {
+    text-decoration: none;
+    color: black;
+  }
+</style>
+
+<body>
+<header>
+  <nav>
+    <ul>
+      <span class="market">개발 마켓</span>
+
+      <a class="a" href="/products/new">상품 등록</a>
+      <a class="a" href="/products">상품 목록</a>
+      <form action="/search" method="get">
+        <div class="form-group">
+          <input class="search" name="name" id="input" type="text" placeholder="물품을 검색해보세요.">
+        </div>
+        <button type="submit" hidden="hidden"></button>
+      </form>
+      <a class="a" href="/login"> 채팅하기</a>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <h1 class="h1">중고거래 최근 매물</h1>
+  <div class="container">
+
+    <div class="item" th:each="product : ${products}">
+      <!-- 이미지를 동적으로 설정 -->
+      <a class="product" th:href="|/products/${product.getId()}|">
+        <img id="image"  th:if="!${product.getStringImageFiles().equals('')}" th:src="|/images/${#strings.substringBefore(product.getStringImageFiles(), ',')}|" th:width="200" th:height="200">
+        <img id="default_image" th:src="|/images/default_product.jpeg|" th:if="${product.getStringImageFiles().equals('')}" th:width="200" th:height="200">
+        <p class="name" th:text="|상품명: ${product.name}|"></p>
+        <p class="price" th:text="|가격: ${product.price}원|"></p>
+        <p class="category" th:text="|종류: ${product.category}|"></p>
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<footer>footer</footer>
+</body>
+</html>

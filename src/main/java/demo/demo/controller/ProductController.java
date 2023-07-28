@@ -3,11 +3,8 @@ package demo.demo.controller;
 import demo.demo.Form.ProductCreateForm;
 import demo.demo.Form.ProductUpdateForm;
 import demo.demo.domain.Product;
-import demo.demo.domain.UploadFile;
 import demo.demo.service.FileService;
-import demo.demo.service.ProductCreateService;
 import demo.demo.service.ProductService;
-import demo.demo.service.ProductUpdateService;
 import demo.demo.utility.Time;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +18,6 @@ import javax.validation.Valid;
 import java.net.MalformedURLException;
 import java.util.*;
 
-import static demo.demo.defaultName.PRODUCT_IMAGE;
-
-
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -31,8 +25,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final FileService fileService;
-    private final ProductCreateService productCreateService;
-    private final ProductUpdateService productUpdateService;
+
 
     private final Time time;
 
@@ -55,7 +48,7 @@ public class ProductController {
             return "products/createProductForm";
         }
 
-        Product product = productCreateService.createProduct(form);
+        Product product = productService.createProduct(form);
 
         redirectAttributes.addAttribute("productId", product.getId());
         return "redirect:/products/{productId}";
@@ -65,10 +58,10 @@ public class ProductController {
     public String getEditView(@PathVariable Long id, Model model) {
         Product product = productService.findById(id).orElseThrow(NoSuchElementException::new);
 
-        ProductUpdateForm productUpdateForm = productUpdateService.createProduct(product);
+        ProductUpdateForm productUpdateForm = productService.createProduct(product);
         model.addAttribute("product", productUpdateForm);
 
-        List<String> imageFileNames = productUpdateService.getImageFileNames(product);
+        List<String> imageFileNames = productService.getImageFileNames(product);
         model.addAttribute("imageFileNames", imageFileNames);
 
         return "products/product-edit";
@@ -81,7 +74,7 @@ public class ProductController {
             log.info("BindingResult = {}", result);
         }
 
-        productUpdateService.update(form);
+        productService.update(form);
 
         redirectAttributes.addAttribute("productId", form.getId());
         return "redirect:/products/{productId}";
