@@ -31,4 +31,6 @@ public interface ProductRepository {
 
     // 선택한 카테로기 상품 보기
     List<Product> findByCategory(String category);
+
+    boolean delete(Long productId);
 }

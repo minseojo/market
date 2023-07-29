@@ -45,7 +45,6 @@
   <h1>상품 수정</h1>
 
     <form th:action="|/products/edit/${product.id}|"  th:object="${product}" method="post">
-
       <label for="name">상품 이름:</label>
       <input type="text" id="name" name="name" th:value="${product.name}">
       <br><br>
@@ -59,6 +58,11 @@
       <!-- 올바른 표현식을 사용하여 수정하기 버튼 렌더링 -->
       <button type="submit"> 수정 하기</button>
     </form>
+
+    <form id="deleteForm" th:action="|/products/${product.id}|" th:object="${product}" method="post">
+      <button type="submit" class="delete_button" >삭제하기</button>
+    </form>
+
   <p class="createDate" th:field="${product}" th:text="|상품등록일: ${product.createDate}|"></p>
 
   <button onclick="showPrevImage()">이전</button>

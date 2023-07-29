@@ -19,8 +19,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.*;
 
@@ -42,13 +44,14 @@ public class ProductController {
         return "products/productsList";
     }
 
-    @GetMapping("/products/new")
-    public String createForm(@SessionAttribute(name = SessionConst.LOGIN_USER) User loginMember) {
-        if (loginMember == null) {
-            return "login/login-view";
-        }
 
-        return "products/createProductForm";
+    //  이상하게 required 없애면 인터셉터가 정상 작동안함
+    @GetMapping("/products/new")
+    public String createForm(@SessionAttribute(name = SessionConst.LOGIN_USER,  required = false) User loginUser) {
+        if (loginUser == null) {
+            return "redirect:/login";
+        }
+        return "products/product-new";
     }
 
     @PostMapping("/products/new")
@@ -58,7 +61,7 @@ public class ProductController {
                          RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             log.info("BindingResult = {}", result);
-            return "products/createProductForm";
+            return "redirect:/products/new";
         }
 
         Product product = productService.create(form, loginUser.getId());
@@ -68,24 +71,20 @@ public class ProductController {
     }
 
 
-    @GetMapping("/products/edit/{id}")
-    public String getEditView(@PathVariable Long id,
+    @GetMapping("/products/edit/{productId}")
+    public String getEditView(@PathVariable Long productId,
                               @SessionAttribute(name = SessionConst.LOGIN_USER) User loginUser,
                               RedirectAttributes redirectAttributes,
                               HttpServletRequest request,
                               Model model) {
-        if (loginUser == null) {
-            log.info("getEditView 로그인 안함");
-            return "redirect:login-view";
-        }
 
-        Product product = productService.findById(id).orElseThrow(NoSuchElementException::new);
+        Product product = productService.findById(productId).orElseThrow(NoSuchElementException::new);
         ProductUpdateForm productUpdateForm = productService.updateProductCreate(product);
 
         if (!productService.ownerCheck(loginUser.getId(), product.getOwnerId())) {
             log.info("[{}]: 상품 주인이 아닌 사용자 요청", loginUser.getId());
-            redirectAttributes.addAttribute("id", product.getId());
-            return "redirect:/products/{id}";
+            redirectAttributes.addAttribute("productId", product.getId());
+            return "redirect:/products/{productId}";
         }
 
         model.addAttribute("product", productUpdateForm);
@@ -96,16 +95,19 @@ public class ProductController {
 
 
     @PostMapping("/products/edit/{id}")
-    public String update(@Valid @ModelAttribute("product") ProductUpdateForm form, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String update(@Valid @ModelAttribute("product") ProductUpdateForm form,
+                          BindingResult result,
+                          RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             log.info("BindingResult = {}", result);
         }
 
         productService.update(form);
 
-        redirectAttributes.addAttribute("productId", form.getId());
+        redirectAttributes.addAttribute("productId", form.getId()); // 변수명 변경으로 인해 여기도 productId로 변경
         return "redirect:/products/{productId}";
     }
+
 
     @GetMapping("/products/{id}")
     public String product(@PathVariable Long id, Model model,
@@ -114,8 +116,8 @@ public class ProductController {
         if (product == null) {
             return "errors/product-null";
         }
-        model.addAttribute("product", product);
 
+        model.addAttribute("product", product);
         List<String> imageFileNames = productService.getImageFileNames(product);
         model.addAttribute("imageFileNames", imageFileNames);
 
@@ -125,10 +127,11 @@ public class ProductController {
         return "products/product-view";
     }
 
-    @ResponseBody
-    @GetMapping("/images/{filename}")
-    public UrlResource downloadImage(@PathVariable String filename) throws MalformedURLException {
-        return new UrlResource("file:" + fileService.getFullPath(filename));
+    @PostMapping("/products/{id}")
+    public String delete(@PathVariable Long id,
+                         RedirectAttributes redirectAttributes) {
+        productService.delete(id);
+        return "redirect:/";
     }
 
 }

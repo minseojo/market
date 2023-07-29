@@ -230,6 +230,24 @@ public class JdbcProductRepository implements ProductRepository {
             close(conn, pstmt, rs);
         }
     }
+    @Override
+    public boolean delete(Long productId) {
+        String sql = "DELETE FROM product WHERE id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, productId);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to delete the product with ID: " + productId, e);
+        } finally {
+            close(conn, pstmt, null);
+        }
+    }
+
 
     public List<Product> findAll() {
         String sql = "select * from Product";

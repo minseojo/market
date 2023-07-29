@@ -93,4 +93,9 @@ public class ProductService {
         }
         return imageFileNames;
     }
+
+    public void delete(Long productId) {
+        productRepository.delete(productId);
+    }
+
 }

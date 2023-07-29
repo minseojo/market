@@ -19,7 +19,7 @@ public class ProductCreateForm {
     @Range(min = 0, max = 999999999)
     private Integer price;
 
-    @NotNull
+    @NotBlank
     // 체크로 고르게 끔. 즉 공백일 가능성은 제로, 하나를 무조건 선택해야함
     private String category;
 
