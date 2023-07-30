@@ -14,19 +14,90 @@
     </nav>
 </header>
 
+<style>
+    .field-error {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+</style>
+
 <body>
+<h2>회원 가입</h2>
     <div class="container">
-        <form action="/signup" method="post" enctype="application/x-www-form-urlencoded">
+
+        <form th:action="|/signup|" th:object="${signupForm}" method="post" enctype="application/x-www-form-urlencoded">
             <div class="form-group">
-                <label for="name">회원 가입</label>
-                <input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요">
-                <input type="text" id="userId" name="userId" placeholder="아이디를 입력하세요">
-                <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요">
-                <input type="text" id="name" name="name" placeholder="이름을 입력하세요">
-                <input type="email" id="email" name="email" placeholder="이메일을 입력하세요">
-                <input type="text" id="phoneNumber" name="phoneNumber" placeholder="휴대폰 번호를 입력하세요">
-                <input type="text" id="address" name="address" placeholder="주소를 입력하세요">
+                <div>
+                    <label for="nickname">닉네임:</label>
+                    <input type="text" id="nickname" th:field="*{nickname}"
+                           th:errorclass="field-error" class="form-control"
+                           placeholder="닉네임을 입력하세요">
+                    <br>
+                    <div class="field-error" th:errors="*{nickname}">닉네임 오류</div>
+                </div>
+                <br>
+
+                <div>
+                    <label for="userId">아이디:</label>
+                    <input type="text" id="userId" th:field="*{userId}"
+                           th:errorclass="field-error" class="form-control"
+                           placeholder="아이디를 입력하세요">
+                    <br>
+                    <div class="field-error" th:errors="*{userId}">닉네임 오류</div>
+                </div>
+                <br>
+
+                <div>
+                    <label for="password">비밀번호:</label>
+                    <input type="text" id="password" th:field="*{password}"
+                           th:errorclass="field-error" class="form-control"
+                           placeholder="비밀번호를 입력하세요">
+                    <br>
+                    <div class="field-error" th:errors="*{password}">닉네임 오류</div>
+                </div>
+                <br>
+
+                <div>
+                    <label for="userId">이름:</label>
+                    <input type="text" id="name" th:field="*{name}"
+                           th:errorclass="field-error" class="form-control"
+                           placeholder="이름을 입력하세요">
+                    <br>
+                    <div class="field-error" th:errors="*{name}">닉네임 오류</div>
+                </div>
+                <br>
+
+                <div>
+                    <label for="email">이메일:</label>
+                    <input type="email" id="email" th:field="*{email}"
+                           th:errorclass="field-error" class="form-control"
+                           placeholder="이메일을 입력하세요">
+                    <br>
+                    <div class="field-error" th:errors="*{email}">닉네임 오류</div>
+                </div>
+                <br>
+
+                <div>
+                    <label for="phoneNumber">휴대폰 번호:</label>
+                    <input type="text" id="phoneNumber" th:field="*{phoneNumber}"
+                           th:errorclass="field-error" class="form-control"
+                           placeholder="휴대폰 번호를 입력하세요">
+                    <br>
+                    <div class="field-error" th:errors="*{phoneNumber}">닉네임 오류</div>
+                </div>
+                <br>
+
+                <div>
+                    <label for="address">주소:</label>
+                    <input type="text" id="address" th:field="*{address}"
+                           th:errorclass="field-error" class="form-control"
+                           placeholder="주소를 입력하세요">
+                    <br>
+                    <div class="field-error" th:errors="*{address}">닉네임 오류</div>
+                </div>
+                <br>
             </div>
+
             <p>프로필 이미지 업로드</p>
             <input type="file" name="imageFile">
             <button type="submit">등록</button>

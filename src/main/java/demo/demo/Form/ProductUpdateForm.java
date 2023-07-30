@@ -16,14 +16,14 @@ import java.util.List;
 public class ProductUpdateForm {
     private Long id;
 
-    @NotBlank(message = "공백은 입력할 수 없습니다.")
+    @NotBlank(message = "상품명을 입력해 주세요.")
     private String name;
 
-    @NotNull
-    @Range(min = 0, max = 999999999, message = "가격은 0원에서 999999999까지 가능 합니다.")
+    @NotNull(message = "가격을 입력해 주세요.")
+    @Range(min = 0, max = 999999999, message = "0에서 999999999 사이의 값을 입력해주세요.")
     private Integer price;
 
-    @NotBlank(message = "카테고리는 필수 입니다.")
+    @NotBlank(message = "카테고리를 골라 주세요.")
     // 체크로 고르게 끔. 즉 공백일 가능성은 제로, 하나를 무조건 선택해야함
     private String category;
 

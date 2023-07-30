@@ -46,7 +46,8 @@ public class LoginController {
 
         User user = userService.findByUserId(loginForm.getUserId()).orElse(null);
         if (user == null || !loginService.login(user, loginForm)) {
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            bindingResult.reject("loginFail", " 아이디 또는 비밀번호를 잘못 입력했습니다.\n" +
+                    "입력하신 내용을 다시 확인해주세요.");
             return "login/login-view";
         }
 
@@ -58,17 +59,17 @@ public class LoginController {
     }
 
     @GetMapping("/signup")
-    public String signupHome() {
+    public String signupHome(Model model) {
+        model.addAttribute("signupForm", new SignupForm());
         return "login/signup-view";
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid @ModelAttribute SignupForm form,
+    public String signup(@Valid @ModelAttribute("signupForm") SignupForm form,
                          BindingResult result,
                          RedirectAttributes redirectAttributes)  {
         if (result.hasErrors()) {
-
-            log.info("{}", result);
+            return "/login/signup-view";
         }
 
         Long id = loginService.signup(form);

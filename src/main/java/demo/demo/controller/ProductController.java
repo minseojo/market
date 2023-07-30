@@ -52,7 +52,12 @@ public class ProductController {
                          BindingResult bindingResult,
                          @SessionAttribute(SessionConst.LOGIN_USER) User loginUser,
                          RedirectAttributes redirectAttributes) {
+        if (loginUser == null) {
+            return "redirect:/";
+        }
+
         if (bindingResult.hasErrors()) {
+            log.info("{}", bindingResult);
             return "products/product-new";
         }
 
