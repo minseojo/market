@@ -73,7 +73,6 @@
   <div class="container">
   <h1>상품 수정</h1>
       <form th:action="|/products/edit/*{id}|" th:object="${product}" method="post">
-
         <div>
           <label for="name">상품 이름:</label>
           <input type="text" id="name" th:field="*{name}"
@@ -88,7 +87,7 @@
 
         <div>
           <label for="price">상품 가격:</label>
-          <input type="text" id="price" th:field="*{price}"
+          <input type="number" maxlength="9" id="price" th:field="*{price}"
                  th:errorclass="field-error" class="form-control"
                  placeholder="가격을 입력하세요">
           <br>
@@ -120,13 +119,12 @@
         <button type="submit" class="delete_button" >삭제하기</button>
       </form>
     -->
-    <div th:object="${product}">
-      <p class="createDate" th:text="|상품등록일: *{createDate}|" ></p>
+    <p class="createDate" th:text="|상품등록일: *{createDate}|" ></p>
       <img id="image" th:src="|/images/${imageFileNames[0]}|" th:width="300" th:height="300">
       <button onclick="showPrevImage()">이전</button>
       <button onclick="showNextImage()">다음</button>
     </div>
-  </div>
+
 </body>
 </html>
 

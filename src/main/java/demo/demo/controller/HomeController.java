@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Member;
 import java.util.List;
 
 @Controller
@@ -20,6 +19,7 @@ public class HomeController {
     @GetMapping("/")
     private String home(@SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User loginMember,
                         Model model) {
+
         List<Product> products = productService.findLimitTwenty();
         model.addAttribute("products", products);
 

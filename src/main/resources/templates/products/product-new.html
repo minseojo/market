@@ -1,15 +1,14 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="list.css" />
-  <title>createProductForm</title>
 </head>
 
+
 <header>
+
   <nav>
     <ul>
       <a class="market" href="/">개발 마켓</a>
@@ -17,26 +16,60 @@
   </nav>
 </header>
 
+<main>
+</main>
+
+<style>
+  .field-error {
+    border-color: #dc3545;
+    color: #dc3545;
+  }
+</style>
 <body>
-<div class="container">
+  <div class="container">
+    <form th:action="|/products/new|" th:object="${product}" enctype="multipart/form-data" method="post" >
+      <div class="form-group">
+        <div>
+          <label for="name">상품 이름:</label>
+          <input type="text" id="name" th:field="*{name}"
+                 th:errorclass="field-error" class="form-control"
+                 placeholder="이름을 입력하세요">
+          <br>
+          <div class="field-error" th:errors="*{name}">
+            가격 오류
+          </div>
+        </div>
+        <br>
 
-  <form action="/products/new" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-      <label for="name">상품 이름</label>
-      <input type="text" id="name" name="name" placeholder="상품이름을 입력하세요">
+        <div>
+          <label for="price">상품 가격:</label>
+          <input type="number" maxlength="9" id="price" th:field="*{price}"
+                 th:errorclass="field-error" class="form-control"
+                 placeholder="가격을 입력하세요">
+          <br>
+          <div class="field-error" th:errors="*{price}">
+            가격 오류
+          </div>
+        </div>
+        <br>
 
-      <label for="price">상품 가격</label>
-      <input type="text" id="price" name="price" placeholder="가격을 입력하세요">
+        <div>
+          <label for="category">상품 카테고리:</label>
+          <input type="text" id="category" th:field="*{category}"
+                 th:errorclass="field-error" class="form-control"
+                 placeholder="카테고리를 입력하세요">
+          <br>
+          <div class="field-error" th:errors="*{category}">
+            카테고리 오류
+          </div>
+        </div>
+        <input type="file" multiple="multiple" id ="imageFiles" name="imageFiles">
+        <button type="submit">등록</button>
+      </div>
+    </form>
 
-      <label for="category">상품 종류</label>
-      <input type="text" id="category" name="category" placeholder="카테고리를 입력하세요">
-    </div>
 
-    <label for="imageFiles">상품 이미지 업로드</label>
-    <input type="file" multiple="multiple" id ="imageFiles" name="imageFiles">
-    <button type="submit">등록</button>
-  </form>
-
-</div> <!-- /container -->
+  </div> <!-- /container -->
 </body>
+
 </html>

@@ -51,16 +51,15 @@ public class ProductService {
         return productRepository.findByFilter(name);
     }
 
-    public Product update(ProductUpdateForm form) {
+    public Long update(ProductUpdateForm form) {
         Product product = Product.builder()
                 .id(form.getId())
                 .name(form.getName())
                 .price(form.getPrice())
                 .category(form.getCategory())
-                .ownerId(form.getOwnerId())
                 .build();
 
-        return productRepository.update(product);
+        return productRepository.update(product).getId();
     }
 
     public boolean ownerCheck(Long loginUserId, Long ownerId) {
@@ -76,8 +75,6 @@ public class ProductService {
                 .name(product.getName())
                 .price(product.getPrice())
                 .category(product.getCategory())
-                .createDate(product.getCreateDate())
-                .ownerId(product.getOwnerId())
                 .build();
     }
 

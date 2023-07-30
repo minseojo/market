@@ -1,6 +1,7 @@
 package demo.demo.Form;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
@@ -10,17 +11,16 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @Builder
 public class ProductUpdateForm {
     private Long id;
 
-    @NotBlank(message = "상품 이름은 필수 입니다.")
+    @NotBlank(message = "공백은 입력할 수 없습니다.")
     private String name;
 
-    @NotNull(message = "가격은 필수 입니다.")
-    @Range(min = 0, max = 999999999, message = "가격은 0 ~ 999999999 까지 허용합니다.")
+    @NotNull
+    @Range(min = 0, max = 999999999, message = "가격은 0원에서 999999999까지 가능 합니다.")
     private Integer price;
 
     @NotBlank(message = "카테고리는 필수 입니다.")
@@ -28,9 +28,5 @@ public class ProductUpdateForm {
     private String category;
 
     private List<MultipartFile> imageFiles;
-
-    private String createDate;
-
-    private Long ownerId;
 
 }

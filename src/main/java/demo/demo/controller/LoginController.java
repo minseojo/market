@@ -9,8 +9,9 @@ import demo.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -29,21 +29,24 @@ public class LoginController {
     private final UserService userService;
     private final LoginService loginService;
     @GetMapping("/login")
-    public String loginHome() {
+    public String loginHome(Model model) {
+        model.addAttribute("loginForm", new LoginForm("", ""));
         return "login/login-view";
     }
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute LoginForm form, BindingResult result,
+    public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm,
+                        BindingResult bindingResult,
                         @RequestParam(defaultValue = "/") String redirectURL,
                         HttpServletRequest request) {
-        if (result.hasErrors()) {
+
+        if (bindingResult.hasErrors()) {
             return "login/login-view";
         }
-        log.info("{}", redirectURL);
-        User user = userService.findByUserId(form.getUserId()).orElse(null);
-        if (user == null || !loginService.login(user, form)) {
-            result.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+
+        User user = userService.findByUserId(loginForm.getUserId()).orElse(null);
+        if (user == null || !loginService.login(user, loginForm)) {
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "login/login-view";
         }
 
