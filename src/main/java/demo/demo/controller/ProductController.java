@@ -52,6 +52,9 @@ public class ProductController {
                          BindingResult bindingResult,
                          @SessionAttribute(SessionConst.LOGIN_USER) User loginUser,
                          RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "products/product-new";
+        }
 
         Product product = productService.create(form, loginUser.getId());
         redirectAttributes.addAttribute("productId", product.getId());
