@@ -63,23 +63,52 @@
 <main>
 </main>
 
+<style>
+  .field-error {
+    border-color: #dc3545;
+    color: #dc3545;
+  }
+</style>
 <body>
   <div class="container">
   <h1>상품 수정</h1>
-    <div th:object="${product}">
+      <form th:action="|/products/edit/*{id}|" th:object="${product}" method="post">
 
-      <form th:action="|/products/edit/*{id}|" method="post">
-        <label for="name">상품 이름:</label>
-        <input type="text" id="name" name="name" th:value="*{name}">
-        <br><br>
+        <div>
+          <label for="name">상품 이름:</label>
+          <input type="text" th:field="*{name}"
+                 th:errorclass="field-error" class="form-control"
+                 placeholder="이름을 입력하세요">
+          <br>
+          <div class="field-error" th:errors="*{name}">
+            가격 오류
+          </div>
+        </div>
+        <br>
 
-        <label for="price">상품 가격:</label>
-        <input type="text" id="price" name="price" th:value="*{price}">
-        <br><br>
+        <div>
+          <label for="price">상품 가격:</label>
+          <input type="text" th:field="*{price}"
+                 th:errorclass="field-error" class="form-control"
+                 placeholder="가격을 입력하세요">
+          <br>
+          <div class="field-error" th:errors="*{price}">
+            가격 오류
+          </div>
+        </div>
+        <br>
 
-        <label for="category">상품 종류:</label>
-        <input type="text" id="category" name="category" th:value="*{category}"><br><br>
-        <!-- 올바른 표현식을 사용하여 수정하기 버튼 렌더링 -->
+        <div>
+          <label for="category">상품 카테고리:</label>
+          <input type="text"  th:field="*{category}"
+                 th:errorclass="field-error" class="form-control"
+                 placeholder="카테고리를 입력하세요">
+          <br>
+          <div class="field-error" th:errors="*{category}">
+            카테고리 오류
+          </div>
+        </div>
+
         <button type="submit"> 수정 하기</button>
       </form>
 
@@ -91,13 +120,12 @@
         <button type="submit" class="delete_button" >삭제하기</button>
       </form>
     -->
-
-      <p class="createDate" th:text="|상품등록일: *{createDate}|"></p>
+    <div th:object="${product}">
+      <p class="createDate" th:text="|상품등록일: *{createDate}|" ></p>
+      <img id="image" th:src="|/images/${imageFileNames[0]}|" th:width="300" th:height="300">
+      <button onclick="showPrevImage()">이전</button>
+      <button onclick="showNextImage()">다음</button>
     </div>
-
-    <img id="image" th:src="|/images/${imageFileNames[0]}|" th:width="300" th:height="300">
-    <button onclick="showPrevImage()">이전</button>
-    <button onclick="showNextImage()">다음</button>
   </div>
 </body>
 </html>
