@@ -56,7 +56,6 @@ public class JdbcProductRepository implements ProductRepository {
         // 이미지 파일들 (',') 구분자로 구분해서 연결
         String imageFileNames = connectImageFiles(product);
         try {
-            System.out.println("ower" + product.getOwnerId());
             conn = getConnection();
             pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, product.getName());

@@ -1,12 +1,6 @@
 package demo.demo.domain;
 
 import lombok.*;
-import org.hibernate.validator.constraints.Range;
-import org.springframework.lang.Nullable;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -15,31 +9,20 @@ import java.util.List;
 
 public class Product{
 
-    @Builder.Default
-    private Long id = -1L;
+    private Long id;
 
-    @NotBlank
     private String name;
 
-    @NotNull
-    @Range(min = 0, max = 999999999)
     private Integer price;
-    @NotNull
-    // 체크로 고르게 끔. 즉 공백일 가능성은 제로, 하나를 무조건 선택해야함
     private String category;
 
-    @Nullable
     private List<UploadFile> imageFiles;
 
-    //images (db)
-    @Nullable
     private String stringImageFiles;
 
     //yyyy-MM-dd HH:mm:ss (mysql DateTime)
-    @NotNull
     private String createDate;
 
-    @NotNull
     private Long ownerId;
 
 }

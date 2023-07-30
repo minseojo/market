@@ -14,7 +14,7 @@ public class SearchController {
     private final ProductService productService;
 
     @GetMapping(value = "/search")
-    public String searchList(Model model, @RequestParam String name) {
+    public String searchList(@RequestParam String name, Model model) {
         List<Product> products = productService.findByFilter(name);
         model.addAttribute("products", products);
         return "products/productsList";

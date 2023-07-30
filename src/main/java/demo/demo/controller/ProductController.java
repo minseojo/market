@@ -8,34 +8,27 @@ import demo.demo.domain.User;
 import demo.demo.service.FileService;
 import demo.demo.service.ProductService;
 import demo.demo.utility.Time;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.*;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
 public class ProductController {
-
     private final ProductService productService;
-    private final FileService fileService;
-
-
-    private final Time time;
 
     @GetMapping("/products")
     public String products(Model model) {
@@ -55,12 +48,12 @@ public class ProductController {
     }
 
     @PostMapping("/products/new")
-    public String create(@Valid @ModelAttribute ProductCreateForm form,
-                         BindingResult result,
+    public String create(@Valid @ModelAttribute("product") ProductCreateForm form,
+                         BindingResult bindingResult,
                          @SessionAttribute(SessionConst.LOGIN_USER) User loginUser,
                          RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
-            log.info("BindingResult = {}", result);
+        if (bindingResult.hasErrors()) {
+            log.info("BindingResult = {}", bindingResult);
             return "redirect:/products/new";
         }
 
@@ -75,7 +68,6 @@ public class ProductController {
     public String getEditView(@PathVariable Long productId,
                               @SessionAttribute(name = SessionConst.LOGIN_USER) User loginUser,
                               RedirectAttributes redirectAttributes,
-                              HttpServletRequest request,
                               Model model) {
 
         Product product = productService.findById(productId).orElseThrow(NoSuchElementException::new);
@@ -92,27 +84,26 @@ public class ProductController {
         model.addAttribute("imageFileNames", imageFileNames);
         return "products/product-edit";
     }
-
-
     @PostMapping("/products/edit/{id}")
     public String update(@Valid @ModelAttribute("product") ProductUpdateForm form,
-                          BindingResult result,
-                          RedirectAttributes redirectAttributes) {
+                         BindingResult result,
+                         RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             log.info("BindingResult = {}", result);
         }
 
         productService.update(form);
 
-        redirectAttributes.addAttribute("productId", form.getId()); // 변수명 변경으로 인해 여기도 productId로 변경
+        redirectAttributes.addAttribute("productId", form.getId());
         return "redirect:/products/{productId}";
     }
 
 
-    @GetMapping("/products/{id}")
-    public String product(@PathVariable Long id, Model model,
+    @GetMapping("/products/{productId}")
+    public String product(@PathVariable Long productId,
+                          Model model,
                           @SessionAttribute(name = SessionConst.LOGIN_USER, required = false)  User loginUser) {
-        Product product = productService.findById(id).orElse(null);
+        Product product = productService.findById(productId).orElse(null);
         if (product == null) {
             return "errors/product-null";
         }
@@ -127,11 +118,15 @@ public class ProductController {
         return "products/product-view";
     }
 
-    @PostMapping("/products/{id}")
-    public String delete(@PathVariable Long id,
-                         RedirectAttributes redirectAttributes) {
-        productService.delete(id);
-        return "redirect:/";
+    @DeleteMapping
+    @RequestMapping(value = "/products/{productId}")
+    public ResponseEntity<String> delete(@PathVariable Long productId) {
+        boolean deleted = productService.delete(productId);
+        if (deleted) {
+            return ResponseEntity.ok("상품이 삭제되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("상품 삭제에 실패했습니다.");
+        }
     }
 
 }

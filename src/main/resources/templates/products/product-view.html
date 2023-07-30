@@ -7,7 +7,8 @@
     <!-- 기존 스크립트는 제외하고 아래 내용으로 대체 -->
     <script th:inline="javascript">
         let imageIndex = 0;
-        let images = /*[[${imageFileNames}]]*/ [];
+        const images = /*[[${imageFileNames}]]*/ [];
+
         function showNextImage() {
             let imgElement = document.getElementById('image');
             imageIndex = (imageIndex + 1) % images.length;

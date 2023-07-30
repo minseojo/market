@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,12 +35,12 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute LoginForm form, BindingResult result,
-                        RedirectAttributes redirectAttributes,
+                        @RequestParam(defaultValue = "/") String redirectURL,
                         HttpServletRequest request) {
         if (result.hasErrors()) {
             return "login/login-view";
         }
-
+        log.info("{}", redirectURL);
         User user = userService.findByUserId(form.getUserId()).orElse(null);
         if (user == null || !loginService.login(user, form)) {
             result.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
@@ -49,7 +51,7 @@ public class LoginController {
         HttpSession session = request.getSession();
         //세션에 로그인 회원 정보 보관
         session.setAttribute(SessionConst.LOGIN_USER, user);
-        return "redirect:/";
+        return "redirect:" + redirectURL;
     }
 
     @GetMapping("/signup")
@@ -62,6 +64,7 @@ public class LoginController {
                          BindingResult result,
                          RedirectAttributes redirectAttributes)  {
         if (result.hasErrors()) {
+
             log.info("{}", result);
         }
 

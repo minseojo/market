@@ -32,12 +32,14 @@
         <nav>
             <ul>
                 <a class="market" href="/">개발 마켓</a>
+
                 <form action="/search" method="get">
                     <div class="form-group">
-                        <input class="search" name="name" id="input" type="text" placeholder="물품을 검색해보세요.">
+                        <input class="search" name="name" type="text" placeholder="물품을 검색해보세요.">
                     </div>
                     <button type="submit" hidden="hidden"></button>
                 </form>
+
                 <li><button class="chat" id="button">채팅하기</button></li>
             </ul>
         </nav>
@@ -48,9 +50,15 @@
   <div class="container">
       <div class="item" th:each="product : ${products}">
           <a class="product" th:href="|/products/${product.getId()}|">
+
               <!-- 이미지를 동적으로 설정 -->
-              <img id="image"  th:if="${product.getStringImageFiles() != null}" th:src="|/images/${#strings.substringBefore(product.getStringImageFiles(), ',')}|" th:width="200" th:height="200">
-              <img id="image2" th:src="|/images/default_product.jpeg|" th:if="${product.getStringImageFiles() == null}" th:width="200" th:height="200">
+              <img id="image"  th:if="${product.getStringImageFiles() != null}"
+                   th:src="|/images/${#strings.substringBefore(product.getStringImageFiles(), ',')}|"
+                   th:width="200" th:height="200">
+              <img id="image2" th:src="|/images/default_product.jpeg|"
+                   th:if="${product.getStringImageFiles() == null}"
+                   th:width="200" th:height="200">
+
               <p class="name" th:text="|상품명: ${product.name}|"></p>
               <p class="price" th:text="|가격: ${product.price}원|"></p>
               <p class="category" th:text="|종류: ${product.category}|"></p>

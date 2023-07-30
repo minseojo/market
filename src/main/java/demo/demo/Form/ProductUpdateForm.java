@@ -16,14 +16,14 @@ import java.util.List;
 public class ProductUpdateForm {
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "상품 이름은 필수 입니다.")
     private String name;
 
-    @NotNull
-    @Range(min = 0, max = 999999999)
+    @NotNull(message = "가격은 필수 입니다.")
+    @Range(min = 0, max = 999999999, message = "가격은 0 ~ 999999999 까지 허용합니다.")
     private Integer price;
 
-    @NotBlank
+    @NotBlank(message = "카테고리는 필수 입니다.")
     // 체크로 고르게 끔. 즉 공백일 가능성은 제로, 하나를 무조건 선택해야함
     private String category;
 

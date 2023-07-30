@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
   <!-- 기존 스크립트는 제외하고 아래 내용으로 대체 -->
   <script th:inline="javascript">
     let imageIndex = 0;
@@ -25,11 +27,32 @@
       let prevImage = images[imageIndex];
       imgElement.src = "/images/" + prevImage;
     }
+
+    function deleteProduct() {
+      let productId = /*[[${product.getId()}]]*/ [];
+      if (confirm("정말로 상품을 삭제하시겠습니까?")) {
+        fetch(`/products/` + productId, {
+          method: 'DELETE'
+        }).then(response => {
+          if (response.ok) {
+            // 삭제 성공 시 처리할 로직
+            alert("상품이 삭제되었습니다.");
+            window.location.href = '/';
+          } else {
+            // 삭제 실패 시 처리할 로직
+            alert('상품 삭제에 실패했습니다.');
+          }
+        }).catch(error => {
+          console.error('Error:', error);
+          alert('상품 삭제에 실패했습니다.');
+        });
+      }
+    }
   </script>
 
-</head>
 
 <header>
+
   <nav>
     <ul>
       <a class="market" href="/">개발 마켓</a>
@@ -43,32 +66,38 @@
 <body>
   <div class="container">
   <h1>상품 수정</h1>
+    <div th:object="${product}">
 
-    <form th:action="|/products/edit/${product.id}|"  th:object="${product}" method="post">
-      <label for="name">상품 이름:</label>
-      <input type="text" id="name" name="name" th:value="${product.name}">
-      <br><br>
+      <form th:action="|/products/edit/*{id}|" method="post">
+        <label for="name">상품 이름:</label>
+        <input type="text" id="name" name="name" th:value="*{name}">
+        <br><br>
 
-      <label for="price">상품 가격:</label>
-      <input type="text" id="price" name="price" th:value="${product.price}">
-      <br><br>
+        <label for="price">상품 가격:</label>
+        <input type="text" id="price" name="price" th:value="*{price}">
+        <br><br>
 
-      <label for="category">상품 종류:</label>
-      <input type="text" id="category" name="category" th:value="${product.category}"><br><br>
-      <!-- 올바른 표현식을 사용하여 수정하기 버튼 렌더링 -->
-      <button type="submit"> 수정 하기</button>
-    </form>
+        <label for="category">상품 종류:</label>
+        <input type="text" id="category" name="category" th:value="*{category}"><br><br>
+        <!-- 올바른 표현식을 사용하여 수정하기 버튼 렌더링 -->
+        <button type="submit"> 수정 하기</button>
+      </form>
 
-    <form id="deleteForm" th:action="|/products/${product.id}|" th:object="${product}" method="post">
-      <button type="submit" class="delete_button" >삭제하기</button>
-    </form>
+      <!-- 삭제하기 버튼 추가 -->
+      <button type="button" class="delete_button" onclick="deleteProduct()">삭제하기</button>
 
-  <p class="createDate" th:field="${product}" th:text="|상품등록일: ${product.createDate}|"></p>
+      <!--
+      <form id="deleteForm" th:action="|/products/*{id}|" method="post">
+        <button type="submit" class="delete_button" >삭제하기</button>
+      </form>
+    -->
 
-  <button onclick="showPrevImage()">이전</button>
-  <button onclick="showNextImage()">다음</button>
-  <img id="image" th:src="|/images/${imageFileNames[0]}|" th:width="300" th:height="300">
+      <p class="createDate" th:text="|상품등록일: *{createDate}|"></p>
+    </div>
 
+    <img id="image" th:src="|/images/${imageFileNames[0]}|" th:width="300" th:height="300">
+    <button onclick="showPrevImage()">이전</button>
+    <button onclick="showNextImage()">다음</button>
   </div>
 </body>
 </html>

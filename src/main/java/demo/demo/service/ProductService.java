@@ -2,7 +2,6 @@ package demo.demo.service;
 
 import demo.demo.Form.ProductCreateForm;
 import demo.demo.Form.ProductUpdateForm;
-import demo.demo.SessionConst;
 import demo.demo.domain.Product;
 import demo.demo.domain.UploadFile;
 import demo.demo.repository.ProductRepository;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.AttributedString;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +28,6 @@ public class ProductService {
         if (storeImageFiles.isEmpty()) {
             storeImageFiles.add(new UploadFile(PRODUCT_IMAGE));
         }
-        System.out.println("lg"+loginUserId);
         Product product = Product.builder()
                 .name(form.getName())
                 .price(form.getPrice())
@@ -94,8 +91,8 @@ public class ProductService {
         return imageFileNames;
     }
 
-    public void delete(Long productId) {
-        productRepository.delete(productId);
+    public boolean delete(Long productId) {
+        return productRepository.delete(productId);
     }
 
 }
