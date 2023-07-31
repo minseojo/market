@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @Controller
@@ -14,7 +16,7 @@ public class SearchController {
     private final ProductService productService;
 
     @GetMapping(value = "/search")
-    public String searchList(@RequestParam String name, Model model) {
+    public String searchList(@RequestParam String name, Model model)  {
         List<Product> products = productService.findByFilter(name);
         model.addAttribute("products", products);
         return "products/productsList";

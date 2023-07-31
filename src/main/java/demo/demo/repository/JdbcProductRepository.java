@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -197,8 +198,8 @@ public class JdbcProductRepository implements ProductRepository {
                 products.add(product);
             }
             return products;
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         } finally {
             close(conn, pstmt, rs);
         }

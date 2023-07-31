@@ -47,7 +47,7 @@ public class ProductService {
     }
 
     public Optional<Product> findById(Long id) {return productRepository.findById(id);}
-    public List<Product> findByFilter(String name) {
+    public List<Product> findByFilter(String name){
         return productRepository.findByFilter(name);
     }
 
