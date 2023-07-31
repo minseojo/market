@@ -11,7 +11,7 @@
 
   <nav>
     <ul>
-      <a class="market" href="/">개발 마켓</a>
+      <a class="market" href="/" th:text="#{market}">개발 마켓</a>
     </ul>
   </nav>
 </header>
@@ -30,36 +30,40 @@
   <form th:action="|/products/new|" th:object="${product}" enctype="multipart/form-data" method="post" >
     <div class="form-group">
       <div>
-        <label for="name">상품 이름:</label>
+        <label for="name" th:text="#{product.productName}">상품 이름:</label>
         <input type="text" id="name" th:field="*{name}"
                th:errorclass="field-error" class="form-control"
-               placeholder="이름을 입력하세요">
+               th:placeholder="#{placeholder.productName}">
         <br>
-        <div class="field-error" th:errors="*{name}">가격 오류</div>
+        <div class="field-error" th:errors="*{name}">상품 이름 오류</div>
       </div>
       <br>
 
       <div>
-        <label for="price">상품 가격:</label>
+        <label for="price" th:text="#{product.price}">상품 가격:</label>
         <input type="number" maxlength="9" id="price" th:field="*{price}"
                th:errorclass="field-error" class="form-control"
-               placeholder="가격을 입력하세요">
+               th:placeholder="#{placeholder.price}">
         <br>
         <div class="field-error" th:errors="*{price}" >가격 오류</div>
       </div>
       <br>
 
       <div>
-        <label for="category">상품 카테고리:</label>
+        <label for="category" th:text="#{product.category}">상품 카테고리:</label>
         <input type="text" id="category" th:field="*{category}"
                th:errorclass="field-error" class="form-control"
-               placeholder="카테고리를 입력하세요">
+               th:placeholder="#{placeholder.category}">
         <br>
         <div class="field-error" th:errors="*{category}">카테고리 오류</div>
       </div>
-      <label for="imageFiles"> 이미지 업로드</label>
+
+      <label for="imageFiles" th:text="#{image.save}"> 이미지 업로드</label>
       <input type="file" multiple="multiple" id ="imageFiles" name="imageFiles">
-      <button type="submit">등록</button>
+
+      <br>
+      <button type="submit" th:text="#{button.save}">등록</button>
+      <button type="button" onclick="location.href='/'" th:text="#{button.cancel}">취소</button>
     </div>
   </form>
 

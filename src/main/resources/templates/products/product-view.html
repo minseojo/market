@@ -32,7 +32,7 @@
 <header>
     <nav>
         <ul>
-            <a class="market" href="/">개발 마켓</a>
+            <a class="market" href="/" th:text="#{market}">개발 마켓</a>
         </ul>
     </nav>
 </header>
@@ -46,11 +46,12 @@
         <p class="category" th:text="${product.category}"></p>
         <p class="createDate" th:text="${product.createDate}"></p>
 
-        <button onclick="showPrevImage()">이전</button>
-        <button onclick="showNextImage()">다음</button>
+        <button onclick="showPrevImage()" th:text="#{button.prev}">이전</button>
+        <button onclick="showNextImage()" th:text="#{button.next}">다음</button>
         <img id="image" th:src="|/images/${imageFileNames[0]}|" th:width="300" th:height="300">
 
-     <button th:if="${loginUserId == product.ownerId}" th:onclick="|location.href='/products/edit/${product.id}'|">상품 수정</button>
+     <button th:if="${loginUserId == product.ownerId}"
+             th:onclick="|location.href='/products/edit/${product.id}'|" th:text="#{button.update}">상품 수정</button>
     </div>
 
 </body>

@@ -18,32 +18,25 @@
     }
 </style>
 
+
 <header>
     <nav>
         <ul>
-            <a class="market" href="/">개발 마켓</a>
+            <a class="market" href="/" th:text="#{market}">개발 마켓</a>
+
+            <form action="/search" method="get">
+                <div class="form-group">
+                    <input class="search" name="name" type="text" placeholder="물품을 검색해보세요.">
+                </div>
+                <button type="submit" hidden="hidden"></button>
+            </form>
+
+            <li><button class="chat" id="button">채팅하기</button></li>
         </ul>
     </nav>
 </header>
 
-
 <body>
-    <header>
-        <nav>
-            <ul>
-                <a class="market" href="/">개발 마켓</a>
-
-                <form action="/search" method="get">
-                    <div class="form-group">
-                        <input class="search" name="name" type="text" placeholder="물품을 검색해보세요.">
-                    </div>
-                    <button type="submit" hidden="hidden"></button>
-                </form>
-
-                <li><button class="chat" id="button">채팅하기</button></li>
-            </ul>
-        </nav>
-    </header>
 <main>
     <h1 class="h1">중고거래 매물</h1>
 <div>
@@ -59,9 +52,9 @@
                    th:if="${product.getStringImageFiles() == null}"
                    th:width="200" th:height="200">
 
-              <p class="name" th:text="|상품명: ${product.name}|"></p>
-              <p class="price" th:text="|가격: ${product.price}원|"></p>
-              <p class="category" th:text="|종류: ${product.category}|"></p>
+              <p class="name" th:text="|#{product.productName} ${product.name}|"></p>
+              <p class="price" th:text="|#{product.price} ${product.price}원|"></p>
+              <p class="category" th:text="|#{product.category} ${product.category}|"></p>
           </a>
       </div>
   </div>

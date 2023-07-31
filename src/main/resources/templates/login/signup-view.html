@@ -9,7 +9,7 @@
 <header>
     <nav>
         <ul>
-            <a class="market" href="/">개발 마켓</a>
+            <a class="market" href="/" th:text="#{market}">개발 마켓</a>
         </ul>
     </nav>
 </header>
@@ -28,70 +28,70 @@
         <form th:action="|/signup|" th:object="${signupForm}" method="post" enctype="application/x-www-form-urlencoded">
             <div class="form-group">
                 <div>
-                    <label for="nickname">닉네임:</label>
+                    <label for="nickname" th:text="#{user.nickname}">닉네임</label>
                     <input type="text" id="nickname" th:field="*{nickname}"
                            th:errorclass="field-error" class="form-control"
-                           placeholder="닉네임을 입력하세요">
+                           th:placeholder="#{placeholder.nickname}">
                     <br>
                     <div class="field-error" th:errors="*{nickname}">닉네임 오류</div>
                 </div>
                 <br>
 
                 <div>
-                    <label for="userId">아이디:</label>
+                    <label for="userId" th:text="#{user.userId}">아이디</label>
                     <input type="text" id="userId" th:field="*{userId}"
                            th:errorclass="field-error" class="form-control"
-                           placeholder="아이디를 입력하세요">
+                           th:placeholder="#{placeholder.userId}">
                     <br>
                     <div class="field-error" th:errors="*{userId}">닉네임 오류</div>
                 </div>
                 <br>
 
                 <div>
-                    <label for="password">비밀번호:</label>
+                    <label for="password" th:text="#{user.password}">비밀번호</label>
                     <input type="text" id="password" th:field="*{password}"
                            th:errorclass="field-error" class="form-control"
-                           placeholder="비밀번호를 입력하세요">
+                           th:placeholder="#{placeholder.password}">
                     <br>
                     <div class="field-error" th:errors="*{password}">닉네임 오류</div>
                 </div>
                 <br>
 
                 <div>
-                    <label for="userId">이름:</label>
+                    <label for="userId" th:text="#{user.name}">이름</label>
                     <input type="text" id="name" th:field="*{name}"
                            th:errorclass="field-error" class="form-control"
-                           placeholder="이름을 입력하세요">
+                           th:placeholder="#{placeholder.name}">
                     <br>
                     <div class="field-error" th:errors="*{name}">닉네임 오류</div>
                 </div>
                 <br>
 
                 <div>
-                    <label for="email">이메일:</label>
+                    <label for="email" th:text="#{user.email}">이메일</label>
                     <input type="email" id="email" th:field="*{email}"
                            th:errorclass="field-error" class="form-control"
-                           placeholder="이메일을 입력하세요">
+                           th:placeholder="#{placeholder.email}">
                     <br>
                     <div class="field-error" th:errors="*{email}">닉네임 오류</div>
                 </div>
                 <br>
 
                 <div>
-                    <label for="phoneNumber">휴대폰 번호:</label>
+                    <label for="phoneNumber" th:text="#{user.phoneNumber}">번호</label>
                     <input type="text" id="phoneNumber" th:field="*{phoneNumber}"
                            th:errorclass="field-error" class="form-control"
-                           placeholder="휴대폰 번호를 입력하세요">
+                           th:placeholder="#{placeholder.phoneNumber}">
                     <br>
                     <div class="field-error" th:errors="*{phoneNumber}">닉네임 오류</div>
                 </div>
                 <br>
 
                 <div>
-                    <label for="address">주소:</label>
+                    <label for="address" th:text="#{user.address}">주소</label>
                     <input type="text" id="address" th:field="*{address}"
                            th:errorclass="field-error" class="form-control"
-                           placeholder="주소를 입력하세요">
+                           th:placeholder="#{placeholder.address}">
                     <br>
                     <div class="field-error" th:errors="*{address}">닉네임 오류</div>
                 </div>
@@ -100,7 +100,7 @@
 
             <p>프로필 이미지 업로드</p>
             <input type="file" name="imageFile">
-            <button type="submit">등록</button>
+            <button type="submit" th:text="#{button.save}">등록</button>
         </form>
 
     </div> <!-- /container -->

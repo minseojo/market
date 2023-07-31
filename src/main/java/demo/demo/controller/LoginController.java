@@ -88,4 +88,14 @@ public class LoginController {
         return "redirect:/";
     }
 
+    @GetMapping("/find-id")
+    public String findId(){
+        return "/login/findId-view";
+    }
+
+    @GetMapping("/find-password")
+    public String findPassword(){
+        return "/login/findPassword-view";
+    }
+
 }

@@ -32,7 +32,6 @@
   /* 버튼에 마우스를 올렸을 때 스타일 변경 */
   .logout-button:hover {
     background-color: lightgray;
-
   }
 </style>
 
@@ -40,20 +39,20 @@
 <header>
   <nav>
     <ul>
-      <span class="market">개발 마켓</span>
+      <a class="market" href="/" th:text="#{market}">개발 마켓</a>
 
-      <a class="a" href="/products/new">상품 등록</a>
-      <a class="a" href="/products">상품 목록</a>
+      <a class="a" href="/products/new" th:text="#{product.save}">상품 등록</a>
+      <a class="a" href="/products" th:text="#{product.products}">상품 목록</a>
 
       <form action="/search" method="get">
         <div class="form-group">
-          <input class="search" name="name" id="input" type="text" placeholder="물품을 검색해보세요.">
+          <input class="search" name="name" id="input" type="text" th:placeholder="#{placeholder.search}">
         </div>
         <button type="submit" hidden="hidden"></button>
       </form>
 
       <form id="logoutForm" action="/logout" method="post">
-        <button type="submit" class="logout-button" >로그아웃</button>
+        <button type="submit" class="logout-button" th:text="#{logout}"}>로그아웃</button>
       </form>
 
     </ul>
@@ -69,9 +68,9 @@
       <a class="product" th:href="|/products/${product.getId()}|">
         <img id="image"  th:if="!${product.getStringImageFiles().equals('')}" th:src="|/images/${#strings.substringBefore(product.getStringImageFiles(), ',')}|" th:width="200" th:height="200">
         <img id="default_image" th:src="|/images/default_product.jpeg|" th:if="${product.getStringImageFiles().equals('')}" th:width="200" th:height="200">
-        <p class="name" th:text="|상품명: ${product.name}|"></p>
-        <p class="price" th:text="|가격: ${product.price}원|"></p>
-        <p class="category" th:text="|종류: ${product.category}|"></p>
+        <p class="name" th:text="|#{product.productName} ${product.name}|"></p>
+        <p class="price" th:text="|#{product.price} ${product.price}원|"></p>
+        <p class="category" th:text="|#{product.category} ${product.category}|"></p>
       </a>
     </div>
   </div>
