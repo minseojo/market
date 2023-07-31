@@ -100,7 +100,9 @@
 
             <p>프로필 이미지 업로드</p>
             <input type="file" name="imageFile">
+            <br>
             <button type="submit" th:text="#{button.save}">등록</button>
+            <button type="button" onclick="location.href='/login'" th:text="#{button.cancel}">취소</button>
         </form>
 
     </div> <!-- /container -->
