@@ -31,12 +31,6 @@
 </style>
 
 <script>
-  const textBox = document.getElementById("price");
-  textBox.onpaste = (e) => { //붙여 넣기 막기
-    console.log(1)
-    e.preventDefault();
-    return false;
-  };
 // [샹품 가격 실시간 검증]
 function validateProductPrice() {
   const inputField = document.getElementById('price');
@@ -55,9 +49,9 @@ function validateProductPrice() {
   } else {
     errorText.textContent = '';
   }
-    // 3자리마다 ',' 붙이기
-    inputValue = inputValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    inputField.value = inputValue;
+  // 3자리마다 ',' 붙이기
+  inputValue = inputValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  inputField.value = inputValue;
 }
 
 //[서버로 보내기 전에 폼 데이터 전처리]
