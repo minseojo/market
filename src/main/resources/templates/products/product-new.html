@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 </head>
 
 
 <header>
-
   <nav>
     <ul>
       <a class="market" href="/" th:text="#{market}">개발 마켓</a>
@@ -24,7 +24,46 @@
     border-color: #dc3545;
     color: #dc3545;
   }
+  .text-error {
+    color: #dc3545;
+  }
+
 </style>
+
+<script>
+  // [샹품 가격 실시간 검증]
+function validateProductPrice() {
+  const inputField = document.getElementById('price');
+  const errorText = document.getElementById('errorText');
+  let inputValue = inputField.value;
+
+  if (inputValue === '') {
+    errorText.textContent = '숫자를 입력해주세요.';
+  } else if (inputValue.length > 11) {
+    inputValue = inputValue.slice(0, 11); // 9글자 이상이면 처음 9글자만 남기도록 함
+    inputValue = inputValue.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // 3자리마다 ',' 붙이기
+    errorText.textContent = '가격은 999,999,999 이하로 입력해주세요.';
+  } else if (!/^\d+$/.test(inputValue)) {
+    inputValue = inputValue.replace(/\D/g, ''); // 숫자 이외의 문자 모두 제거
+    inputField.value = inputValue;
+    errorText.textContent = '숫자를 입력해주세요.';
+  } else {
+    errorText.textContent = '';
+  }
+    // 3자리마다 ',' 붙이기
+    inputValue = inputValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    inputField.value = inputValue;
+}
+
+//[서버로 보내기 전에 폼 데이터 전처리]
+function prepareFormData() {
+  const inputField = document.getElementById('price');
+  const inputValue = inputField.value.replace(/,/g, ''); // 콤마(,) 제거
+  inputField.value = inputValue; // 폼에 변경된 값 설정
+}
+
+
+</script>
 <body>
 <div class="container">
   <form th:action="|/products/new|" th:object="${product}" enctype="multipart/form-data" method="post" >
@@ -40,12 +79,13 @@
       <br>
 
       <div>
-        <label for="price" th:text="#{product.price}">상품 가격:</label>
-        <input type="number" maxlength="9" id="price" th:field="*{price}"
-               th:errorclass="field-error" class="form-control"
+        <label for="price" th:text="#{product.price}">상품 가격</label>
+        <input type="text" id="price" th:field="*{price}" onkeyup="validateProductPrice()"
+               class="form-control"
                th:placeholder="#{placeholder.price}">
         <br>
-        <div class="field-error" th:errors="*{price}" >가격 오류</div>
+        <div class="text-error" id="errorText"></div>
+        <br>
       </div>
       <br>
 
@@ -58,11 +98,13 @@
         <div class="field-error" th:errors="*{category}">카테고리 오류</div>
       </div>
 
+
+
       <label for="imageFiles" th:text="#{image.save}"> 이미지 업로드</label>
       <input type="file" multiple="multiple" id ="imageFiles" name="imageFiles">
 
       <br>
-      <button type="submit" th:text="#{button.save}">등록</button>
+      <button type="submit" th:text="#{button.save}" onclick="prepareFormData()">등록</button>
       <button type="button" onclick="location.href='/'" th:text="#{button.cancel}">취소</button>
     </div>
   </form>
