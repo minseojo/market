@@ -25,10 +25,11 @@ import java.util.*;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/products")
 public class ProductController {
     private final ProductService productService;
 
-    @GetMapping("/products")
+    @GetMapping("")
     public String getProducts(Model model) {
         List<Product> products = productService.findAllProduct();
         model.addAttribute("products", products);
@@ -37,7 +38,7 @@ public class ProductController {
 
 
     //  이상하게 required 없애면 인터셉터가 정상 작동안함
-    @GetMapping("/products/new")
+    @GetMapping("/new")
     public String getCreateView(@SessionAttribute(name = SessionConst.LOGIN_USER,  required = false) User loginUser,
                                 Model model) {
         if (loginUser == null) {
@@ -47,7 +48,7 @@ public class ProductController {
         return "products/product-new";
     }
 
-    @PostMapping("/products/new")
+    @PostMapping("/new")
     public String createProduct(@Validated @ModelAttribute("product") ProductCreateForm form,
                          BindingResult bindingResult,
                          @SessionAttribute(SessionConst.LOGIN_USER) User loginUser,
@@ -67,7 +68,7 @@ public class ProductController {
     }
 
 
-    @GetMapping("/products/edit/{productId}")
+    @GetMapping("/edit/{productId}")
     public String getUpdateView(@PathVariable Long productId,
                                   @SessionAttribute(name = SessionConst.LOGIN_USER) User loginUser,
                               RedirectAttributes redirectAttributes,
@@ -89,7 +90,7 @@ public class ProductController {
         model.addAttribute("imageFileNames", imageFileNames);
         return "products/product-edit";
     }
-    @PostMapping("/products/edit/{id}")
+    @PostMapping("/edit/{id}")
     public String updateProduct(@Validated @ModelAttribute("product") ProductUpdateForm form,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes,
@@ -106,7 +107,7 @@ public class ProductController {
     }
 
 
-    @GetMapping("/products/{productId}")
+    @GetMapping("/{productId}")
     public String getProduct(@PathVariable Long productId,
                           Model model,
                           @SessionAttribute(name = SessionConst.LOGIN_USER, required = false)  User loginUser) {
@@ -125,7 +126,7 @@ public class ProductController {
         return "products/product-view";
     }
 
-    @DeleteMapping("/products/{productId}")
+    @DeleteMapping("/{productId}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long productId) {
         if (!productService.delete(productId)) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("상품 삭제에 실패했습니다.");
