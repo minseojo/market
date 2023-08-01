@@ -62,8 +62,8 @@ public class ProductService {
         return productRepository.update(product).getId();
     }
 
-    public boolean ownerCheck(Long loginUserId, Long ownerId) {
-        if (loginUserId != ownerId) {
+    public boolean ownerCheck(Long loginUserId, Product product) {
+        if (loginUserId != product.getOwnerId()) {
             return false;
         }
         return true;

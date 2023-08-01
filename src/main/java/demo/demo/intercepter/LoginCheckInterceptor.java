@@ -3,6 +3,7 @@ package demo.demo.intercepter;
 
 import demo.demo.SessionConst;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +18,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
         if (session == null || session.getAttribute(SessionConst.LOGIN_USER) == null) {
             log.info("미인증 사용자 요청");
+            response.sendError(HttpStatus.BAD_REQUEST.value(), "미인증 사용자 요청 입니다.");
             //로그인으로 redirect
             response.sendRedirect("/login?redirectURL=" + requestURI);
             return false;
