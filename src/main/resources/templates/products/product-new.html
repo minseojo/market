@@ -37,22 +37,20 @@ function validateProductPrice() {
   const errorText = document.getElementById('errorText');
   let inputValue = inputField.value;
 
-  if (inputValue === '') {
+  if (inputValue === '') { // 공백에서 문자를 입력하는 경우
     errorText.textContent = '숫자를 입력해주세요.';
   } else if (inputValue.length > 11) {
-    inputValue = inputValue.slice(0, 11); // 9글자 이상이면 처음 9글자만 남기도록 함
+    inputValue = inputValue.slice(0, 11); // 최대 가격을 초과한 경우 (범위= 0 ~ 999,999,999)
     errorText.textContent = '가격은 999,999,999 이하로 입력해주세요.';
-  } else if (!/^\d+$/.test(inputValue)) {
-    inputValue = inputValue.replace(/\D/g, ''); // 숫자 이외의 문자 모두 제거
-    inputField.value = inputValue;
-    errorText.textContent = '숫자를 입력해주세요.';
+  } else if (!/^[0-9,]+$/.test(inputValue))  { // 숫자와 컴마만 있는게 아닌 경우
+      errorText.textContent = '숫자를 입력해주세요.';
   } else {
     errorText.textContent = '';
   }
-  // 3자리마다 ',' 붙이기
-  inputValue = inputValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  inputField.value = inputValue;
+  inputValue = inputValue.replace(/\D/g, ''); // 숫자 이외의 문자 모두 제거
+  inputField.value = inputValue.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // 3자리마다 ',' 붙이기
 }
+
 
 //[서버로 보내기 전에 폼 데이터 전처리]
 function prepareFormData() {
