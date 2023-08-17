@@ -22,6 +22,4 @@ public class UserService {
 
     public Optional<User> findByUserId(String userId) {return userRepository.findByUserId(userId);}
 
-
-
 }

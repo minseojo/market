@@ -2,7 +2,7 @@ package demo.demo.controller;
 
 import demo.demo.Form.LoginForm;
 import demo.demo.Form.SignupForm;
-import demo.demo.SessionConst;
+import demo.demo.Config.SessionConst;
 import demo.demo.domain.User;
 import demo.demo.service.LoginService;
 import demo.demo.service.UserService;
@@ -46,8 +46,7 @@ public class LoginController {
 
         User user = userService.findByUserId(loginForm.getUserId()).orElse(null);
         if (user == null || !loginService.login(user, loginForm)) {
-            bindingResult.reject("loginFail", " 아이디 또는 비밀번호를 잘못 입력했습니다.\n" +
-                    "입력하신 내용을 다시 확인해주세요.");
+            bindingResult.reject("loginFail", " 아이디 또는 비밀번호를 잘못 입력했습니다.");
             return "login/login-view";
         }
 
@@ -73,9 +72,8 @@ public class LoginController {
         }
 
         Long id = loginService.signup(form);
-
-        redirectAttributes.addAttribute("id", id);
-        return "redirect:/users/{id}";
+        log.info("[{}] 회원가입 성공", id);
+        return "redirect:/login";
     }
 
     @PostMapping("/logout")

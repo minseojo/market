@@ -1,4 +1,4 @@
-package demo.demo;
+package demo.demo.Config;
 
 import demo.demo.intercepter.LogInterceptor;
 import demo.demo.intercepter.LoginCheckInterceptor;

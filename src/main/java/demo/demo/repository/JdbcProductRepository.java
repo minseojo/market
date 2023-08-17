@@ -3,24 +3,26 @@ package demo.demo.repository;
 import demo.demo.domain.Product;
 import demo.demo.domain.UploadFile;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.datasource.DataSourceUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class JdbcProductRepository implements ProductRepository {
     private final DataSource dataSource;
 
     // 빌더로 상품 생성해서 리턴 (중복 코드 매소드)
-    private Product product(ResultSet rs) throws SQLException {
+    private Product createProduct(ResultSet rs) throws SQLException {
         Long id = rs.getLong("id");
         String name = rs.getString("name");
         Integer price = rs.getInt("price");
@@ -48,7 +50,7 @@ public class JdbcProductRepository implements ProductRepository {
         return String.valueOf(imagesFileNames);
     }
 
-    public Product sava(Product product) {
+    public Long sava(Product product) {
         String sql = "insert into Product(name, price, category, images, createDate, owner_id) values(?,?,?,?,?,?)";
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -66,13 +68,12 @@ public class JdbcProductRepository implements ProductRepository {
             pstmt.setString(5, String.valueOf(String.valueOf(product.getCreateDate())));
             pstmt.setLong(6, product.getOwnerId());
             pstmt.executeUpdate();
-
             rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
                 long generatedId = rs.getLong(1);
-                product.setId(generatedId); // 프라이머리 키(id) 값을 Product 객체에 설정
+                return generatedId;
             }
-            return product;
+            return -1L;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         } finally {
@@ -118,7 +119,7 @@ public class JdbcProductRepository implements ProductRepository {
             pstmt.setLong(1, id);
             rs = pstmt.executeQuery();
             if(rs.next()) {
-                Product product = product(rs);
+                Product product = createProduct(rs);
                 return Optional.of(product);
             } else {
                 return Optional.empty();
@@ -135,7 +136,7 @@ public class JdbcProductRepository implements ProductRepository {
         return Optional.empty();
     }
 
-    public List<Product> findLimitTwenty() {
+    public List<Product> findLimitEight() {
         String sql = "select * from Product"
                 + " order by id desc"
                 + " limit 8";
@@ -148,7 +149,7 @@ public class JdbcProductRepository implements ProductRepository {
             rs = pstmt.executeQuery();
             List<Product> products = new ArrayList<>();
             while(rs.next()) {
-                Product product = product(rs);
+                Product product = createProduct(rs);
                 products.add(product);
             }
             return products;
@@ -170,7 +171,7 @@ public class JdbcProductRepository implements ProductRepository {
             rs = pstmt.executeQuery();
             List<Product> products = new ArrayList<>();
             while(rs.next()) {
-                Product product = product(rs);
+                Product product = createProduct(rs);
                 products.add(product);
             }
             return products;
@@ -182,7 +183,7 @@ public class JdbcProductRepository implements ProductRepository {
     }
 
     @Override
-    public List<Product> findByFilter(String name) {
+    public List<Product> findByFilter(String productName) {
         String sql = "select * from Product where name like ?";
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -190,11 +191,11 @@ public class JdbcProductRepository implements ProductRepository {
         try {
             conn = getConnection();
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%"+name+"%");
+            pstmt.setString(1, "%"+productName+"%");
             rs = pstmt.executeQuery();
             List<Product> products = new ArrayList<>();
             while(rs.next()) {
-                Product product = product(rs);
+                Product product = createProduct(rs);
                 products.add(product);
             }
             return products;
@@ -217,7 +218,7 @@ public class JdbcProductRepository implements ProductRepository {
             rs = pstmt.executeQuery();
             List<Product> products = new ArrayList<>();
             while (rs.next()) {
-                Product product = product(rs);
+                Product product = createProduct(rs);
                 products.add(product);
             }
             if (products.isEmpty()) {
@@ -231,7 +232,7 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
     @Override
-    public boolean delete(Long productId) {
+    public boolean deleteById(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -248,7 +249,6 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
 
-
     public List<Product> findAll() {
         String sql = "select * from Product";
         Connection conn = null;
@@ -259,8 +259,8 @@ public class JdbcProductRepository implements ProductRepository {
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
             List<Product> products = new ArrayList<>();
-            while(rs.next()) {
-                Product product = product(rs);
+            while (rs.next()) {
+                Product product = createProduct(rs);
                 products.add(product);
             }
             return products;
@@ -270,33 +270,13 @@ public class JdbcProductRepository implements ProductRepository {
             close(conn, pstmt, rs);
         }
     }
-    private Connection getConnection() {
-        return DataSourceUtils.getConnection(dataSource);
+    private Connection getConnection() throws SQLException {
+        return  dataSource.getConnection();
     }
     private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (pstmt != null) {
-                pstmt.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (conn != null) {
-                close(conn);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        JdbcUtils.closeConnection(conn);
+        JdbcUtils.closeStatement(pstmt);
+        JdbcUtils.closeResultSet(rs);
     }
-    private void close(Connection conn) throws SQLException {
-        DataSourceUtils.releaseConnection(conn, dataSource);
-    }
+
 }

@@ -10,26 +10,22 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 public class SignupForm {
-    private Long id;
-    @NotBlank(message = "닉네임을 입력해 주세요.")
+    @NotBlank(message = "{required.user.nickname}")
     private String nickname;  // 사용자가 이용할 닉네임
-    @NotBlank(message = "아이디를 입력해 주세요.")
+    @NotBlank(message = "{required.user.userId}")
     private String userId; // Id
-    @NotBlank(message = "비밀번호를 입력해 주세요.")
+    @NotBlank(message = "{required.user.password}")
     private String password; // 비밀번호
-    @NotBlank(message = "이름을 입력해 주세요.")
+    @NotBlank(message = "{required.user.name}")
     private String name; // 이름
 
-    @NotBlank(message = "이메일을 입력해 주세요.")
+    @NotBlank(message = "{required.user.email}")
     @Email
     private String email; // 이메일
 
-    @NotBlank(message = "휴대폰 번호를 입력해 주세요.")
+    @NotBlank(message = "{required.user.phoneNumber}")
     private String phoneNumber; // 휴대폰 번호
 
-    @NotBlank(message = "주소 입력해 주세요.")
+    @NotBlank(message = "{required.user.address}")
     private String address; //주소
-
-    public SignupForm(){}
-
 }

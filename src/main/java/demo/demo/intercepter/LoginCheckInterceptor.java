@@ -1,7 +1,7 @@
 package demo.demo.intercepter;
 
 
-import demo.demo.SessionConst;
+import demo.demo.Config.SessionConst;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;

@@ -1,6 +1,6 @@
 package demo.demo.controller;
 
-import demo.demo.SessionConst;
+import demo.demo.Config.SessionConst;
 import demo.demo.domain.Product;
 import demo.demo.domain.User;
 import demo.demo.service.ProductService;
@@ -19,8 +19,7 @@ public class HomeController {
     @GetMapping("/")
     private String home(@SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User loginMember,
                         Model model) {
-
-        List<Product> products = productService.findLimitTwenty();
+        List<Product> products = productService.findLimitEight();
         model.addAttribute("products", products);
 
         if (loginMember == null) {

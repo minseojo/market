@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 public class Time {
-    public String getTime() {
+    public String getCurrentTime() {
         // 현재 날짜와 시간으로 LocalDateTime 객체 생성
         LocalDateTime currentDateTime = LocalDateTime.now();
         // DateTimeFormatter를 사용하여 형식 지정 (년도/월/일/시/분/초)
@@ -19,3 +19,4 @@ public class Time {
         return timeWithSeconds;
     }
 }
+

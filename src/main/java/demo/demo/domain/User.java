@@ -13,34 +13,31 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class User {
 
-    @NotNull
     private Long id; // 기본키, 디비에 저장 될 유저 고유 id
 
-    @NotBlank
     private String nickname;  // 사용자가 이용할 닉네임
-    @NotBlank
     private String userId; // Id
-    @NotBlank
     private String password; // 비밀번호
 
-    @NotBlank
     private String name; // 이름
 
-    @NotBlank
     private String sex; // 성별
 
-    @Email
     private String email; // 이메일
 
-    @NotBlank
     private String phoneNumber; // 휴대폰 번호
 
-    @NotBlank
     private String address; //주소
 
     // yyyy-MM-dd HH:mm:ss (mysql DateTime)
     private String registrationDate; // 사용자 회원가입 날짜
 
+    public boolean isSameUser(Long userId) {
+        if (this.id != userId) {
+            return false;
+        }
+        return true;
+    }
     /*
     나중에 추가 할 내용
     private String lastLoginDate // 사용자가 마지막으로 로그인한 날짜와 시간을 저장합니다

@@ -42,8 +42,16 @@
         <div class="item" th:each="product : ${products}">
             <!-- 이미지를 동적으로 설정 -->
           <a class="product" th:href="|/products/${product.getId()}|">
-            <img id="image" th:if="!${product.getStringImageFiles().equals('')}" th:src="|/images/${#strings.substringBefore(product.getStringImageFiles(), ',')}|" th:width="200" th:height="200">
-            <img id="default_image" th:src="|/images/default_product.jpeg|" th:if="${product.getStringImageFiles().equals('')}" th:width="200" th:height="200">
+            <img id="image" th:if="!${product.getStringImageFiles().equals('')}"
+                 th:src="|/images/${#strings.substringBefore(product.getStringImageFiles(), ',')}|"
+                 th:width=200
+                 th:height=200>
+
+            <img id="default_image" th:src="|/images/ + #{product.default.image}|"
+                 th:if="${product.getStringImageFiles().equals('')}"
+                 th:width=200
+                 th:height=200>
+
             <p class="name" th:text="|#{product.productName} ${product.name}|"></p>
             <p class="price" th:text="|#{product.price} ${product.price}원|"></p>
             <p class="category" th:text="|#{product.category} ${product.category}|"></p>

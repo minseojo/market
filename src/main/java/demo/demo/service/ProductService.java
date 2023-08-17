@@ -11,10 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
-import static demo.demo.defaultName.PRODUCT_IMAGE;
-
+import static demo.demo.Config.FileConst.DEFAULT_IMAGE_PRODUCT;
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -23,30 +22,35 @@ public class ProductService {
     private final FileService fileService;
     private final Time time;
 
+    @Transactional
     public Product create(ProductCreateForm form, Long loginUserId) {
         List<UploadFile> storeImageFiles = fileService.saveFiles(form.getImageFiles());
         if (storeImageFiles.isEmpty()) {
-            storeImageFiles.add(new UploadFile(PRODUCT_IMAGE));
+            storeImageFiles.add(new UploadFile(DEFAULT_IMAGE_PRODUCT));
         }
+
         Product product = Product.builder()
                 .name(form.getName())
                 .price(form.getPrice())
                 .category(form.getCategory())
-                .createDate(time.getTime())
+                .createDate(time.getCurrentTime())
                 .imageFiles(storeImageFiles)
                 .ownerId(loginUserId)
                 .build();
-
-        productRepository.sava(product);
-
+        Long generatedId = productRepository.sava(product);
+        product.setId(generatedId);
         return product;
     }
-    public List<Product> findLimitTwenty() {return productRepository.findLimitTwenty();}
+    public List<Product> findLimitEight() {return productRepository.findLimitEight();}
     public List<Product> findAllProduct() {
         return productRepository.findAll();
     }
 
-    public Optional<Product> findById(Long id) {return productRepository.findById(id);}
+    public Product findById(Long id) {
+        return productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다."));
+    }
+
+
     public List<Product> findByFilter(String name){
         return productRepository.findByFilter(name);
     }
@@ -58,18 +62,21 @@ public class ProductService {
                 .price(form.getPrice())
                 .category(form.getCategory())
                 .build();
-
         return productRepository.update(product).getId();
     }
-
-    public boolean ownerCheck(Long loginUserId, Product product) {
-        if (loginUserId != product.getOwnerId()) {
-            return false;
+    public boolean delete(Long loginUserId, Long productId) {
+        if (!isProductOwner(loginUserId, productId)) {
+            throw new RuntimeException("비정상 접근입니다. 상품을 삭제할 수 없습니다.");
         }
-        return true;
+        return productRepository.deleteById(productId);
+    }
+    public boolean isProductOwner(Long loginUserId, Long productId) {
+        Product product = findById(productId);
+        return product.isOwner(loginUserId);
     }
 
-    public ProductUpdateForm updateProductCreate(Product product) {
+    public ProductUpdateForm updateProductCreate(Long productId) {
+        Product product = findById(productId);
         return ProductUpdateForm.builder()
                 .id(product.getId())
                 .name(product.getName())
@@ -78,18 +85,20 @@ public class ProductService {
                 .build();
     }
 
-    public List<String> getImageFileNames(Product product) {
+    public List<String> getImageFileNames(Long productId) {
+        Product product = findById(productId);
         List<String> imageFileNames;
         if (product.getStringImageFiles() == null) {
-            imageFileNames = List.of("default_product.jpeg");
+            imageFileNames = List.of(DEFAULT_IMAGE_PRODUCT);
         } else {
             imageFileNames = List.of(product.getStringImageFiles().split(","));
         }
         return imageFileNames;
     }
 
-    public boolean delete(Long productId) {
-        return productRepository.delete(productId);
+    public String getCreateDate(Long productId) {
+        Product product = findById(productId);
+        return product.getCreateDate();
     }
 
 }

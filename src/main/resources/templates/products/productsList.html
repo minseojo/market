@@ -26,7 +26,7 @@
 
             <form action="/search" method="get">
                 <div class="form-group">
-                    <input class="search" name="name" type="text" placeholder="물품을 검색해보세요.">
+                    <input class="search" name="name" type="text" th:placeholder="#{placeholder.search}">
                 </div>
                 <button type="submit" hidden="hidden"></button>
             </form>
@@ -47,10 +47,11 @@
               <!-- 이미지를 동적으로 설정 -->
               <img id="image"  th:if="${product.getStringImageFiles() != null}"
                    th:src="|/images/${#strings.substringBefore(product.getStringImageFiles(), ',')}|"
-                   th:width="200" th:height="200">
-              <img id="image2" th:src="|/images/default_product.jpeg|"
+                   th:width="#{product.image.width}" th:height="#{proudct.image.height}">
+
+              <img id="image2" th:src="|/images/#{product.default.image}|"
                    th:if="${product.getStringImageFiles() == null}"
-                   th:width="200" th:height="200">
+                   th:width="#{product.image.width}" th:height="#{product.image.height}">
 
               <p class="name" th:text="|#{product.productName} ${product.name}|"></p>
               <p class="price" th:text="|#{product.price} ${product.price}원|"></p>

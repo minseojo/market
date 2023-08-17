@@ -9,10 +9,10 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class LoginForm {
 
-    @NotBlank(message = "아이디를 입력해 주세요.")
+    @NotBlank(message = "{required.userId.id}")
     private String userId;
 
-    @NotBlank(message = "비밀번호를 입력해 주세요.")
+    @NotBlank(message = "{required.user.password}")
     private String password;
 
     public LoginForm(String userId, String password) {

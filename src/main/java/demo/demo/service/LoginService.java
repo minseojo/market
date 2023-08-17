@@ -26,9 +26,10 @@ public class LoginService {
                 .email(form.getEmail())
                 .address(form.getAddress())
                 .phoneNumber(form.getPhoneNumber())
-                .registrationDate(time.getTime())
+                .registrationDate(time.getCurrentTime())
                 .build();
 
         return userService.create(user);
     }
+
 }

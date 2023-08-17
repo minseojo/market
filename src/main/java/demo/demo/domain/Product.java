@@ -4,9 +4,7 @@ import lombok.*;
 import java.util.List;
 
 @Getter
-@Setter
 @Builder
-
 public class Product{
 
     private Long id;
@@ -25,4 +23,14 @@ public class Product{
 
     private Long ownerId;
 
+    public boolean isOwner(Long userId) {
+        if (this.ownerId != userId) {
+            return false;
+        }
+        return true;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }

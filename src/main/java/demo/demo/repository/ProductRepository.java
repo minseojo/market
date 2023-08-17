@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ProductRepository {
     // 상품 저장
-    Product sava(Product product);
+    Long sava(Product product);
 
     // 상품 수정
     Product update(Product product);
@@ -21,7 +21,7 @@ public interface ProductRepository {
 
     // 상품 20개 찾기
     // 현재는 8개, 최신 순으로
-    List<Product> findLimitTwenty();
+    List<Product> findLimitEight();
 
     // 상품 전부 찾기
     List<Product> findAll();
@@ -32,5 +32,5 @@ public interface ProductRepository {
     // 선택한 카테로기 상품 보기
     List<Product> findByCategory(String category);
 
-    boolean delete(Long productId);
+    boolean deleteById(Long productId);
 }
