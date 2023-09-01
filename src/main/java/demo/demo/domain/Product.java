@@ -24,10 +24,7 @@ public class Product{
     private Long ownerId;
 
     public boolean isOwner(Long userId) {
-        if (this.ownerId != userId) {
-            return false;
-        }
-        return true;
+        return this.ownerId == userId;
     }
 
     public void setId(long id) {

@@ -1,6 +1,6 @@
 package demo.demo.controller;
 
-import demo.demo.Config.SessionConst;
+import demo.demo.config.SessionConst;
 import demo.demo.domain.Product;
 import demo.demo.domain.User;
 import demo.demo.service.ProductService;
@@ -9,13 +9,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
     private final ProductService productService;
-
     @GetMapping("/")
     private String home(@SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User loginMember,
                         Model model) {

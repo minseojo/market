@@ -1,8 +1,8 @@
 package demo.demo.controller;
 
-import demo.demo.Form.ProductCreateForm;
-import demo.demo.Form.ProductUpdateForm;
-import demo.demo.Config.SessionConst;
+import demo.demo.form.ProductCreateForm;
+import demo.demo.form.ProductUpdateForm;
+import demo.demo.config.SessionConst;
 import demo.demo.domain.Product;
 import demo.demo.domain.User;
 import demo.demo.service.ProductService;
@@ -131,7 +131,6 @@ public class ProductController {
         return "products/product-view";
     }
 
-    @ExceptionHandler
     @DeleteMapping("/{productId}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long productId,
                                                 @SessionAttribute(name = SessionConst.LOGIN_USER) User loginUser) {

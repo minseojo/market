@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static demo.demo.Config.FileConst.FILE_DIR;
+import static demo.demo.config.FileConst.FILE_IMAGE_DIR;
 @Service
 @RequiredArgsConstructor
 public class FileService {
     public String getFullPath(String filename) {
-        return FILE_DIR + filename;
+        return FILE_IMAGE_DIR + filename;
     }
 
     public List<UploadFile> saveFiles(List<MultipartFile> multipartFiles) {

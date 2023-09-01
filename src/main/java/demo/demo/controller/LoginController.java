@@ -1,8 +1,8 @@
 package demo.demo.controller;
 
-import demo.demo.Form.LoginForm;
-import demo.demo.Form.SignupForm;
-import demo.demo.Config.SessionConst;
+import demo.demo.form.LoginForm;
+import demo.demo.form.SignupForm;
+import demo.demo.config.SessionConst;
 import demo.demo.domain.User;
 import demo.demo.service.LoginService;
 import demo.demo.service.UserService;
@@ -72,7 +72,6 @@ public class LoginController {
         }
 
         Long id = loginService.signup(form);
-        log.info("[{}] 회원가입 성공", id);
         return "redirect:/login";
     }
 

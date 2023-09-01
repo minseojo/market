@@ -1,9 +1,7 @@
-package demo.demo.Form;
+package demo.demo.form;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.web.multipart.MultipartFile;
 

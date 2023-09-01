@@ -1,6 +1,5 @@
-package demo.demo.Config;
+package demo.demo.config;
 
-import demo.demo.intercepter.LogInterceptor;
 import demo.demo.intercepter.LoginCheckInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -16,6 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/css/**", "/*.ico", "/error");
 */
+        /*
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(1)
                 .addPathPatterns("/**")
@@ -24,5 +24,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/search", "/products/{id}", "/products", "/find-id", "/find-password",
                         "/css/**", "/*.ico", "/error", "/images/**"
                 );
+                s
+         */
     }
+
 }

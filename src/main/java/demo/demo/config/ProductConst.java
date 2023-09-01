@@ -1,4 +1,4 @@
-package demo.demo.Config;
+package demo.demo.config;
 
 public interface ProductConst {
     int PRODUCT_IMAGE_WIDTH = 200;

@@ -7,6 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="list.css" />
   <title>productsList</title>
+
+    <script>
+    </script>
 </head>
 <style>
     a.market {
@@ -43,15 +46,9 @@
   <div class="container">
       <div class="item" th:each="product : ${products}">
           <a class="product" th:href="|/products/${product.getId()}|">
-
-              <!-- 이미지를 동적으로 설정 -->
-              <img id="image"  th:if="${product.getStringImageFiles() != null}"
+              <img id="image"
                    th:src="|/images/${#strings.substringBefore(product.getStringImageFiles(), ',')}|"
-                   th:width="#{product.image.width}" th:height="#{proudct.image.height}">
-
-              <img id="image2" th:src="|/images/#{product.default.image}|"
-                   th:if="${product.getStringImageFiles() == null}"
-                   th:width="#{product.image.width}" th:height="#{product.image.height}">
+                   th:width="200" th:height="200">
 
               <p class="name" th:text="|#{product.productName} ${product.name}|"></p>
               <p class="price" th:text="|#{product.price} ${product.price}원|"></p>

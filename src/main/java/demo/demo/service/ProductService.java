@@ -1,9 +1,10 @@
 package demo.demo.service;
 
-import demo.demo.Form.ProductCreateForm;
-import demo.demo.Form.ProductUpdateForm;
+import demo.demo.form.ProductCreateForm;
+import demo.demo.form.ProductUpdateForm;
 import demo.demo.domain.Product;
 import demo.demo.domain.UploadFile;
+import demo.demo.excption.AccessDeniedException;
 import demo.demo.repository.ProductRepository;
 import demo.demo.utility.Time;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static demo.demo.Config.FileConst.DEFAULT_IMAGE_PRODUCT;
+import static demo.demo.config.FileConst.FILE_DEFAULT_IMAGE_PRODUCT;
+import static demo.demo.domain.UploadFile.DEFAULT_IMAGE_PRODUCT;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -26,7 +29,7 @@ public class ProductService {
     public Product create(ProductCreateForm form, Long loginUserId) {
         List<UploadFile> storeImageFiles = fileService.saveFiles(form.getImageFiles());
         if (storeImageFiles.isEmpty()) {
-            storeImageFiles.add(new UploadFile(DEFAULT_IMAGE_PRODUCT));
+            storeImageFiles.add(DEFAULT_IMAGE_PRODUCT); //미리 생성해 둔 기본프로필 추가.
         }
 
         Product product = Product.builder()
@@ -37,7 +40,7 @@ public class ProductService {
                 .imageFiles(storeImageFiles)
                 .ownerId(loginUserId)
                 .build();
-        Long generatedId = productRepository.sava(product);
+        Long generatedId = productRepository.save(product);
         product.setId(generatedId);
         return product;
     }
@@ -66,7 +69,7 @@ public class ProductService {
     }
     public boolean delete(Long loginUserId, Long productId) {
         if (!isProductOwner(loginUserId, productId)) {
-            throw new RuntimeException("비정상 접근입니다. 상품을 삭제할 수 없습니다.");
+            throw new AccessDeniedException("비정상 접근입니다. 상품을 삭제할 수 없습니다.");
         }
         return productRepository.deleteById(productId);
     }
@@ -89,7 +92,7 @@ public class ProductService {
         Product product = findById(productId);
         List<String> imageFileNames;
         if (product.getStringImageFiles() == null) {
-            imageFileNames = List.of(DEFAULT_IMAGE_PRODUCT);
+            imageFileNames = List.of(FILE_DEFAULT_IMAGE_PRODUCT);
         } else {
             imageFileNames = List.of(product.getStringImageFiles().split(","));
         }

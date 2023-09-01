@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.MalformedURLException;
 
-import static demo.demo.Config.FileConst.FILE_PROTOCOL;
+import static demo.demo.config.FileConst.FILE_PROTOCOL;
 
 @Controller
 @RequiredArgsConstructor

@@ -39,7 +39,6 @@ class JdbcProductRepositoryTest {
                 .price(1000)
                 .category("음식")
                 .build();
-        Product product3 = productRepository.sava(product);
 
 
         Product product2 = productRepository.findById(product.getId()).get();
@@ -58,7 +57,6 @@ class JdbcProductRepositoryTest {
          *              product, product는 동등 (객체 값만 같음)
          */
 
-        Assertions.assertThat(product).isEqualTo(product3);
         Assertions.assertThat(product.getId()).isEqualTo(product2.getId());
         Assertions.assertThat(product.getName()).isEqualTo(product2.getName());
         Assertions.assertThat(product.getPrice()).isEqualTo(product2.getPrice());

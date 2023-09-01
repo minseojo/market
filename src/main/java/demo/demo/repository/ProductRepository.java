@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ProductRepository {
     // 상품 저장
-    Long sava(Product product);
+    Long save(Product product);
 
     // 상품 수정
     Product update(Product product);
@@ -33,4 +33,5 @@ public interface ProductRepository {
     List<Product> findByCategory(String category);
 
     boolean deleteById(Long productId);
+
 }

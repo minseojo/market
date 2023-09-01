@@ -1,7 +1,7 @@
 package demo.demo.service;
 
-import demo.demo.Form.LoginForm;
-import demo.demo.Form.SignupForm;
+import demo.demo.form.LoginForm;
+import demo.demo.form.SignupForm;
 import demo.demo.domain.User;
 import demo.demo.utility.Time;
 import lombok.RequiredArgsConstructor;

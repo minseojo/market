@@ -50,7 +50,7 @@ public class JdbcProductRepository implements ProductRepository {
         return String.valueOf(imagesFileNames);
     }
 
-    public Long sava(Product product) {
+    public Long save(Product product) {
         String sql = "insert into Product(name, price, category, images, createDate, owner_id) values(?,?,?,?,?,?)";
         Connection conn = null;
         PreparedStatement pstmt = null;

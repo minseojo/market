@@ -1,6 +1,5 @@
-package demo.demo.Form;
+package demo.demo.form;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;

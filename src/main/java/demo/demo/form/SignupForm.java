@@ -1,6 +1,5 @@
-package demo.demo.Form;
+package demo.demo.form;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
