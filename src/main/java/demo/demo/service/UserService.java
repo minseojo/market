@@ -4,11 +4,13 @@ import demo.demo.domain.User;
 import demo.demo.repository.JdbcUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
     private final JdbcUserRepository userRepository;
 

@@ -6,6 +6,7 @@ import demo.demo.domain.User;
 import demo.demo.utility.Time;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +18,7 @@ public class LoginService {
         return user.getPassword().equals(form.getPassword());
     }
 
+    @Transactional
     public Long signup(SignupForm form) {
         User user = User.builder()
                 .userId(form.getUserId())

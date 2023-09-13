@@ -19,7 +19,7 @@ import static demo.demo.domain.UploadFile.DEFAULT_IMAGE_PRODUCT;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional // 트랜잭션 오류시 롤백 아니면 커밋
 public class ProductService {
     private final ProductRepository productRepository;
     private final FileService fileService;

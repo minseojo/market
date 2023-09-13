@@ -4,6 +4,7 @@ import demo.demo.domain.UploadFile;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -22,6 +23,7 @@ public class FileService {
         return FILE_IMAGE_DIR + filename;
     }
 
+    @Transactional
     public List<UploadFile> saveFiles(List<MultipartFile> multipartFiles) {
         return multipartFiles.stream()
                 .filter(multipartFile -> !multipartFile.isEmpty())
@@ -29,6 +31,7 @@ public class FileService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public UploadFile saveFile(MultipartFile multipartFile) {
         if (multipartFile.isEmpty()) {
             throw new IllegalArgumentException("Uploaded file is empty");
