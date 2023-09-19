@@ -4,23 +4,23 @@ import demo.demo.domain.Product;
 import demo.demo.domain.UploadFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import java.util.*;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
 public class JdbcProductRepository implements ProductRepository {
     private final DataSource dataSource;
-
+    private final JdbcTemplate template;
     // 빌더로 상품 생성해서 리턴 (중복 코드 매소드)
     private Product createProduct(ResultSet rs) throws SQLException {
         Long id = rs.getLong("id");
@@ -40,24 +40,14 @@ public class JdbcProductRepository implements ProductRepository {
                 .ownerId(owner_id)
                 .build();
     }
-    private String connectImageFiles(Product product) {
-        StringBuilder imagesFileNames = new StringBuilder();
-        if (product.getImageFiles() != null) {
-            for (UploadFile imageFile : product.getImageFiles()) {
-                imagesFileNames.append(imageFile.getStoreFileName()).append(",");
-            }
-        }
-        return String.valueOf(imagesFileNames);
-    }
 
-    public Long save(Product product) {
+    @Override
+    public Product save(Product product, String imageFileNames) {
         String sql = "insert into Product(name, price, category, images, createDate, owner_id) values(?,?,?,?,?,?)";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
-        // 이미지 파일들 (',') 구분자로 구분해서 연결
-        String imageFileNames = connectImageFiles(product);
         try {
             conn = getConnection();
             pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -70,41 +60,27 @@ public class JdbcProductRepository implements ProductRepository {
             pstmt.executeUpdate();
             rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
-                long generatedId = rs.getLong(1);
-                return generatedId;
+                product.setId(rs.getLong(1));
             }
-            return -1L;
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        } finally {
-            close(conn, pstmt, rs);
-        }
-    }
-    public Product update(Product product) {
-        String sql = "update Product SET name = ?, price = ?, category = ? where id = ?";
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        // 이미지 파일들 (',') 구분자로 구분해서 연결
-        //String imageFileNames = connectImageFiles(product);
-
-        try {
-            conn = getConnection();
-            pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pstmt.setString(1, product.getName());
-            pstmt.setInt(2, product.getPrice());
-            pstmt.setString(3, product.getCategory());
-            pstmt.setLong(4, product.getId());
-            //pstmt.setString(4, String.valueOf(imageFileNames));
-
-            pstmt.executeUpdate();
             return product;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         } finally {
             close(conn, pstmt, rs);
         }
+    }
+
+    @Override
+    public boolean update(Product product) {
+        String sql = "update Product SET name = ?, price = ?, category = ? where id = ?";
+        template.update(sql, product.getName(), product.getPrice(), product.getCategory(), product.getId());
+        return true;
+    }
+    @Override
+    public boolean deleteById(Long productId) {
+        String sql = "DELETE FROM product WHERE id = ?";
+        template.update(sql, productId);
+        return true;
     }
 
     @Transactional
@@ -231,23 +207,6 @@ public class JdbcProductRepository implements ProductRepository {
             close(conn, pstmt, rs);
         }
     }
-    @Override
-    public boolean deleteById(Long productId) {
-        String sql = "DELETE FROM product WHERE id = ?";
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            conn = getConnection();
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setLong(1, productId);
-            int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to delete the product with ID: " + productId, e);
-        } finally {
-            close(conn, pstmt, null);
-        }
-    }
 
     public List<Product> findAll() {
         String sql = "select * from Product";
@@ -271,10 +230,12 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
     private Connection getConnection() throws SQLException {
-        return  dataSource.getConnection();
+        Connection con = dataSource.getConnection();
+        log.info("get connection={}, class={}", con, con.getClass());
+        return con;
     }
-    private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
-        JdbcUtils.closeConnection(conn);
+    private void close(Connection con, PreparedStatement pstmt, ResultSet rs) {
+        JdbcUtils.closeConnection(con);
         JdbcUtils.closeStatement(pstmt);
         JdbcUtils.closeResultSet(rs);
     }
